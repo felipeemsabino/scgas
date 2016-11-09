@@ -10,44 +10,53 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
+import br.gov.scgas.dao.GenericDaoImpl;
+import br.gov.scgas.entidade.Posto;
+
 
 
 @Path("/hello")
 public class FirstService {
-	
+
 	private String say;
 
-	/**@Inject
-	private GenericDao<Object, Long> genericDao;*/
-	
+	@Inject
+	private GenericDaoImpl<Object, Long> dao;
+
 	/**@Inject
 	private PropietarioPetDaoImpl<PropietarioPets,Long> daoProp;
-	*/
-	
+	 */
+
 	@Inject
 	private Gson gson;
 
-	
+
 	@GET
 	@Path("/{param}")
 	public Response getMsg(@PathParam("param") String msg) {
-	   
+
 		return Response.status(200).entity(gson.toJson(say)).build();
 	}
 
 	@PostConstruct
 	private void meteAMaeJones() {
-		say = "Jersey say: ";
-				 
+		try {
+			dao.delete(new Posto());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		say = "Jersey say: Teste ";
 
-		
-		
-		
-		
+
+
+
+
+
 
 	}
-	
-	
-	
+
+
+
 
 }

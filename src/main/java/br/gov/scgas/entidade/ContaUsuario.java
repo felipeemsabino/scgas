@@ -1,6 +1,7 @@
 package br.gov.scgas.entidade;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ContaUsuario implements Serializable{
 
@@ -12,7 +13,17 @@ public class ContaUsuario implements Serializable{
 	private String tokenFacebook;
 	private String tokenGmail;
 	private String tokenTwiter;
-	
+	private Date dataCadastro;
+
+	public Date getDataCadastro() {
+		return dataCadastro;
+	}
+
+
+	public void setDataCadastro(Date dataCadastro) {
+		this.dataCadastro = dataCadastro;
+	}
+
 
 	public Long getId() {
 		return id;
