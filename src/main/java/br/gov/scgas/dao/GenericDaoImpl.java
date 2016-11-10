@@ -5,15 +5,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
 import org.hibernate.HibernateException;
 
 public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T, ID> {
 
-	@PersistenceUnit(unitName="orion")
-	private  EntityManagerFactory emf;
-	
+	private  EntityManagerFactory emf;	
 	private  EntityManager entityManager;
 
 	@Override
@@ -55,6 +54,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	private void beginTransaction() throws HibernateException,Exception{
+		emf = Persistence.createEntityManagerFactory("orion");
 		entityManager = emf.createEntityManager();
 		entityManager.getTransaction().begin();
 	}
@@ -62,6 +62,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	private void commitTransaction() {
 		entityManager.getTransaction().commit();
 		entityManager.close();
+		emf.close();
 	}
 
 

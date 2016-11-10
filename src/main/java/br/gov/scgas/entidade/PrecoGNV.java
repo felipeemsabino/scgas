@@ -4,16 +4,41 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name="TB_PRECO_GNV") 
 public class PrecoGNV implements Serializable {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", nullable = false, length = 20)
 	private Long id;
-	private Date dataHoraCadastro;
-	private Posto posto;
-	private ContaUsuario usuario;
 	
-	public ContaUsuario getUsuario() {
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="DATA_HORA_CAD",nullable = false, length = 20) 
+	private Date dataHoraCadastro;
+	
+	@ManyToOne  
+	@JoinColumn(name="ID_POSTO",referencedColumnName="ID") 
+	private Posto posto;
+	
+	@ManyToOne  
+	@JoinColumn(name="ID_USUARIO",referencedColumnName="ID") 
+	private UsuarioApp usuario;
+	
+	public UsuarioApp getUsuario() {
 		return usuario;
 	}
-	public void setUsuario(ContaUsuario usuario) {
+	public void setUsuario(UsuarioApp usuario) {
 		this.usuario = usuario;
 	}
 	private BigDecimal valorGNV;

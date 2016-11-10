@@ -1,7 +1,7 @@
 <Context>
 
- <Resource name="jdbc/scgas" type="javax.sql.DataSource"  driverClassName="org.postgresql.Driver"  url="jdbc:postgresql://localhost:5432/petdatabase"  
-    username="postgres" password="R083rt01010" maxActive="50" maxWait="-1" maxIdle="10"  removeAbandoned="true" logAbandoned="true" 
+ <Resource name="jdbc/scgas" type="javax.sql.DataSource"  driverClassName="org.postgresql.Driver"  url="jdbc:postgresql://pet.copjj2vixn1l.sa-east-1.rds.amazonaws.com:5432/scgas"  
+    username="pet" password="1p3tclu8" maxActive="50" maxWait="-1" maxIdle="10"  removeAbandoned="true" logAbandoned="true" 
     validationQuery="select 1 " testOnReturn="true" testWhileIdle="true"  timeBetweenEvictionRunsMillis="300000" minEvictableIdleTimeMillis="300000"/>
     <Resource name="BeanManager" 
         auth="Container"
