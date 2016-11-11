@@ -8,13 +8,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.executable.ValidateOnExecution;
 
 @Entity
 @Table(name="TB_USUARIO_APP") 
+@NamedQueries({
+	@NamedQuery(name = "UsuarioApp.autenticacaoFacebook", 
+			query = "select obj  from UsuarioApp obj  where obj.tokenFacebook = :idFacebook "
+			),
+	@NamedQuery(name = "UsuarioApp.autenticacaoGmail", 
+	query = "select obj  from UsuarioApp obj  where obj.tokenGmail = :idGmail "
+	),
+	@NamedQuery(name = "UsuarioApp.autentica", query = "select obj  from UsuarioApp obj"
+			+ " where obj.email = :email and obj.senha = :senha "
+			)
+
+
+})
+
 public class UsuarioApp implements Serializable{
 
 	@Id
@@ -28,7 +43,7 @@ public class UsuarioApp implements Serializable{
 	@Column(name="EMAIL",nullable=false,length = 100)
 	private String email;
 	
-	@Column(name="SENHA", nullable = false, length = 200) 
+	@Column(name="SENHA", nullable = true, length = 200) 
 	private String senha;
 	
 	@Column(name="PIN_SENHA", nullable = true, length = 200) 
