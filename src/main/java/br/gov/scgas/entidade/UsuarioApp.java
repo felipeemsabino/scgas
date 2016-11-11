@@ -37,10 +37,11 @@ public class UsuarioApp implements Serializable{
 	@Column(name = "ID", nullable = false, length = 20)
 	private Long id;
 	
+	
 	@Column(name="NOME_USUARIO", nullable = false, length = 100) 
 	private String nome;
 	
-	@Column(name="EMAIL",nullable=false,length = 100)
+	@Column(name="EMAIL",nullable=false,length = 100,unique = true)
 	private String email;
 	
 	@Column(name="SENHA", nullable = true, length = 200) 
@@ -49,13 +50,13 @@ public class UsuarioApp implements Serializable{
 	@Column(name="PIN_SENHA", nullable = true, length = 200) 
 	private String pinSenha;
 	
-	@Column(name="TK_FACEBOOK", nullable = true, length = 200) 
+	@Column(name="TK_FACEBOOK", nullable = true, length = 200,unique = true) 
 	private String tokenFacebook;
 	
-	@Column(name="TK_GMAIL", nullable = true, length = 200) 
+	@Column(name="TK_GMAIL", nullable = true, length = 200,unique = true) 
 	private String tokenGmail;
 	
-	@Column(name="TK_TWITER", nullable = true, length = 200) 
+	@Column(name="TK_TWITER", nullable = true, length = 200,unique = true) 
 	private String tokenTwiter;
 	
 	@Temporal(TemporalType.DATE)

@@ -12,8 +12,10 @@ import org.hibernate.HibernateException;
 
 public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T, ID> {
 
-	private  EntityManagerFactory emf;	
+	private static EntityManagerFactory emf;	
 	private  EntityManager entityManager;
+
+	
 
 	@Override
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
@@ -53,16 +55,26 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 		commitTransaction();
 	}
 
-	private void beginTransaction() throws HibernateException,Exception{
-		emf = Persistence.createEntityManagerFactory("orion");
+	protected void beginTransaction() throws HibernateException,Exception{
+		if(emf == null){
+			emf = Persistence.createEntityManagerFactory("orion");			
+		}
 		entityManager = emf.createEntityManager();
 		entityManager.getTransaction().begin();
 	}
 
-	private void commitTransaction() {
+	protected void commitTransaction() {
 		entityManager.getTransaction().commit();
 		entityManager.close();
-		emf.close();
+		//emf.close();
+	}
+	
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 

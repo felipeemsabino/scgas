@@ -20,7 +20,7 @@ public class BandeiraPosto implements Serializable {
 	@Column(name = "ID", nullable = false, length = 20)
 	private Long id;
 	
-	@Column(name="NOME_BANDEIRA", nullable = false, length = 100) 
+	@Column(name="NOME_BANDEIRA", nullable = false, length = 100,unique = true) 
 	private String nome;
 	
 	@Column(name="URL_IMG", nullable = true, length = 200) 

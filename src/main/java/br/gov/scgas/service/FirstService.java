@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import br.gov.scgas.dao.GenericDaoImpl;
 import br.gov.scgas.entidade.Posto;
+import br.gov.scgas.teste.MakeJsonTest;
 
 
 
@@ -20,8 +21,10 @@ public class FirstService {
 
 	private String say;
 
+	
+	
 	@Inject
-	private GenericDaoImpl<Object, Long> dao;
+	private MakeJsonTest geraJsonUsuarioApp;
 
 	/**@Inject
 	private PropietarioPetDaoImpl<PropietarioPets,Long> daoProp;
@@ -39,21 +42,8 @@ public class FirstService {
 	}
 
 	@PostConstruct
-	private void meteAMaeJones() {
-		try {
-			dao.delete(new Posto());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		say = "Jersey say: Teste ";
-
-
-
-
-
-
-
+	private void innit() {
+		say = "Jersey say: "+geraJsonUsuarioApp.geraJsonUsuarioApp();
 	}
 
 

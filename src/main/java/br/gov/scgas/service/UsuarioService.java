@@ -3,15 +3,18 @@ package br.gov.scgas.service;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 
-import br.gov.scgas.dao.GenericDaoImpl;
+import br.gov.scgas.dao.UsuarioDao;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.GenerateSHA;
 
@@ -23,14 +26,14 @@ public class UsuarioService {
 	private String say;
 
 	@Inject
-	private GenericDaoImpl<UsuarioApp, Long> dao;
+	private UsuarioDao<UsuarioApp, Long> dao;
 
 	@Inject
 	private Gson gson;
 
 
 	@POST
-	@Path("cadastrarusuario")
+	@Path("/cadastrarusuario")
 	public Response getMsg(@Context HttpServletRequest request,String json) {
 		UsuarioApp usuarioApp = gson.fromJson(json, UsuarioApp.class);
 		usuarioApp.setDataCadastro(new Date());
@@ -47,6 +50,7 @@ public class UsuarioService {
 				}else{
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
 				}
+				
 				dao.update(usuarioApp);
 				usuarioApp.setSenha(null);
 			}
@@ -55,8 +59,114 @@ public class UsuarioService {
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar usuario!")).build();
 		}
-		return Response.status(200).entity(gson.toJson(say)).build();
+		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
 	}
+	
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@POST
+	@Path("/autentica")
+	public Response autenticaSenha(@Context HttpServletRequest request,String json) {
+		UsuarioApp usr=null;
+		try {
+			usr = gson.fromJson(json,UsuarioApp.class);
+			String pass = GenerateSHA.getSHA256SecurePassword(usr.getSenha());
+			usr = dao.autenticaUsuario(usr.getEmail(), pass);
+			
+			if(usr == null){
+				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+			}
+			
+			usr.setSenha(null);
+			return Response.status(200).entity(gson.toJson(usr)).build();
+		}catch (NoResultException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(404).entity("Usuario não cadastrado").build();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).entity(null).build();
+		}
+	}
+	
+	
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @param ID do  Facebook
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@GET
+	@Path("/autenticaFacebook/{id}")
+	public Response autenticaFacebook(@PathParam("id") String idParam) {
+		try{
+			UsuarioApp usuarioApp = null;
+			if(idParam != null){
+				usuarioApp = dao.recuperaUsuarioPorFacebook(idParam);
+			}
+			if(usuarioApp == null){
+				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+			}
+			
+			usuarioApp.setSenha(null);
+
+			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
+		}catch(NoResultException e){
+			return Response.status(404).entity("Usuario não cadastrado").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+	
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @param ID do  Facebook
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@GET
+	@Path("/autenticaGmail/{id}")
+	public Response autenticaGmail(@PathParam("id") String idParam) {
+		try{
+			UsuarioApp usuarioApp = null;
+			if(idParam != null){
+				usuarioApp = dao.recuperaUsuarioPorGmail(idParam);
+			}
+			if(usuarioApp == null){
+				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+			}
+			
+			usuarioApp.setSenha(null);
+			
+			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
+		}catch(NoResultException e){
+			return Response.status(404).entity("Usuario não cadastrado").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+
+	
+	
 
 
 

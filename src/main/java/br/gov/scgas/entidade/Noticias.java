@@ -13,7 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="TB_USUARIO_APP") 
+@Table(name="TB_NOTICIA") 
 public class Noticias implements Serializable {
 	
 	@Id

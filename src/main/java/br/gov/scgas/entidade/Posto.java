@@ -26,7 +26,7 @@ public class Posto implements Serializable{
 	@Column(name = "ID", nullable = false, length = 20)
 	private Long id;
 	
-	@Column(name="NOME", nullable = false, length = 100) 
+	@Column(name="NOME", nullable = false, length = 100,unique = true) 
 	private String nome;
 	
 	@Temporal(TemporalType.DATE)
