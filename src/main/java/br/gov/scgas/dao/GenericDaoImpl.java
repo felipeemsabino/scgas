@@ -15,44 +15,75 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	private static EntityManagerFactory emf;	
 	private  EntityManager entityManager;
 
-	
+
 
 	@Override
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
-		beginTransaction();
-		T t = (T) entityManager.find(clazz, id);
-		commitTransaction();
-		return t;
+		try {
+			beginTransaction();
+			T t = (T) entityManager.find(clazz, id);
+			commitTransaction();
+			return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			closeConnection();
+			throw new HibernateException(e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> listAll(Class<T> clazz) throws HibernateException,Exception{
-		beginTransaction();
-		List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
-		commitTransaction();
-		return t;
+		try {
+			beginTransaction();
+			List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
+			commitTransaction();
+			return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			closeConnection();
+			throw new HibernateException(e);
+		}
 	}
 
 	@Override
 	public void save(T entity) throws HibernateException,Exception{
-		beginTransaction();
-		entityManager.persist(entity);
-		commitTransaction();
+		try {
+
+			beginTransaction();
+			entityManager.persist(entity);
+			commitTransaction();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			closeConnection();
+			throw new HibernateException(e);
+		}
 	}
 
 	@Override
 	public void update(T entity) throws HibernateException,Exception{
-		beginTransaction();
-		entityManager.merge(entity);
-		commitTransaction();
+		try {
+			beginTransaction();
+			entityManager.merge(entity);
+			commitTransaction();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			closeConnection();
+			throw new HibernateException(e);
+		}
 	}
 
 	@Override
 	public void delete(T entity) throws HibernateException,Exception{
-		beginTransaction();
-		entityManager.remove(entity);
-		commitTransaction();
+		try {
+			beginTransaction();
+			entityManager.remove(entity);
+			commitTransaction();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			closeConnection();
+			throw new HibernateException(e);
+		}
 	}
 
 	protected void beginTransaction() throws HibernateException,Exception{
@@ -68,13 +99,20 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 		entityManager.close();
 		//emf.close();
 	}
-	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
+	}
+	
+	protected void closeConnection() throws HibernateException, Exception {
+		entityManager.close();
+		emf.close();
+		emf = null;
+		beginTransaction();
 	}
 
 
