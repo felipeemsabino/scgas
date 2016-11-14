@@ -95,9 +95,11 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	protected void commitTransaction() {
+		
 		entityManager.getTransaction().commit();
-		entityManager.close();
-		//emf.close();
+		entityManager.flush();
+		
+	
 	}
 
 	public EntityManager getEntityManager() {
@@ -109,10 +111,9 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 	
 	protected void closeConnection() throws HibernateException, Exception {
+		entityManager.getTransaction().rollback();
 		entityManager.close();
-		emf.close();
-		emf = null;
-		beginTransaction();
+		
 	}
 
 

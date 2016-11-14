@@ -187,7 +187,7 @@
 						<phase>integration-test</phase>
 						<configuration>
 							<tasks>
-								<copy file="target/${pom.build.finalName}.war" tofile="${tomcat.dir}/${pom.build.finalName}.war" />
+								<copy file="target/${pom.project.build.finalName}.war" tofile="${tomcat.dir}/${pom.project.build.finalName}.war" />
 							</tasks>
 						</configuration>
 						<goals>
