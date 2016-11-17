@@ -19,31 +19,23 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 
 	@Override
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
-		try {
-			beginTransaction();
+		
+			
 			T t = (T) entityManager.find(clazz, id);
-			commitTransaction();
+			entityManager.close();
 			return t;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			closeConnection();
-			throw new HibernateException(e);
-		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> listAll(Class<T> clazz) throws HibernateException,Exception{
-		try {
-			beginTransaction();
+		
+			
 			List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
-			commitTransaction();
+			entityManager.close();
 			return t;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			closeConnection();
-			throw new HibernateException(e);
-		}
+		
 	}
 
 	@Override
@@ -97,7 +89,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	protected void commitTransaction() {
 		
 		entityManager.getTransaction().commit();
-		entityManager.flush();
+		
 		
 	
 	}
@@ -111,7 +103,8 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 	
 	protected void closeConnection() throws HibernateException, Exception {
-		entityManager.getTransaction().rollback();
+		
+		entityManager.getTransaction().rollback();			
 		entityManager.close();
 		
 	}

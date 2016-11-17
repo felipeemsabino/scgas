@@ -1,0 +1,14 @@
+br/gov/scgas/entidade/BandeiraPosto.class
+br/gov/scgas/dao/GenericDao.class
+br/gov/scgas/service/UsuarioService.class
+br/gov/scgas/dao/UsuarioDao.class
+br/gov/scgas/dao/GenericDaoImpl.class
+br/gov/scgas/entidade/Posto.class
+br/gov/scgas/util/GenerateSHA.class
+br/gov/scgas/util/ProdutorCDI$GsonDateDeSerializer.class
+br/gov/scgas/entidade/UsuarioApp.class
+br/gov/scgas/teste/MakeJsonTest.class
+br/gov/scgas/entidade/Noticias.class
+br/gov/scgas/service/FirstService.class
+br/gov/scgas/util/ProdutorCDI.class
+br/gov/scgas/entidade/PrecoGNV.class
