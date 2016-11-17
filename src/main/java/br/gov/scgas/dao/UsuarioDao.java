@@ -40,5 +40,24 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 		return usr;
 
 	}
+	@SuppressWarnings("unchecked")
+	public UsuarioApp  recuperaUsuarioEmail(String email) throws HibernateException, Exception {
+		
+		
+		UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getSingleResult();
+		
+		return usr;
+		
+	}
+	@SuppressWarnings("unchecked")
+	public UsuarioApp  recuperaSenhaPorPIN(String email,String pinSenha) throws HibernateException, Exception {
+		
+		
+		UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).
+				setParameter("pinSenha",pinSenha).getSingleResult();
+		
+		return usr;
+		
+	}
 
 }

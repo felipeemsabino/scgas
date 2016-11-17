@@ -25,6 +25,12 @@ import javax.persistence.TemporalType;
 	),
 	@NamedQuery(name = "UsuarioApp.autentica", query = "select obj  from UsuarioApp obj"
 			+ " where obj.email = :email and obj.senha = :senha "
+			),
+	@NamedQuery(name = "UsuarioApp.recuperaUsuarioEmail", query = "select obj  from UsuarioApp obj"
+			+ " where obj.email = :email"
+			),
+	@NamedQuery(name = "UsuarioApp.recuperaSenhaPorPIN", query = "select obj  from UsuarioApp obj"
+			+ " where obj.email = :email and obj.pinSenha = :pinSenha "
 			)
 
 

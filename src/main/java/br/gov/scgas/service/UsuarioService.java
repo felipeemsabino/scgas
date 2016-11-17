@@ -1,6 +1,7 @@
 package br.gov.scgas.service;
 
 import java.util.Date;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
@@ -34,7 +35,7 @@ public class UsuarioService {
 
 	@POST
 	@Path("/cadastrarusuario")
-	public Response getMsg(@Context HttpServletRequest request,String json) {
+	public Response cadastroUsuario(@Context HttpServletRequest request,String json) {
 		UsuarioApp usuarioApp = gson.fromJson(json, UsuarioApp.class);
 		usuarioApp.setDataCadastro(new Date());
 
@@ -50,7 +51,7 @@ public class UsuarioService {
 				}else{
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
 				}
-				
+
 				dao.update(usuarioApp);
 				usuarioApp.setSenha(null);
 			}
@@ -61,7 +62,7 @@ public class UsuarioService {
 		}
 		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
 	}
-	
+
 	/**
 	 * @author robertosampaio
 	 * @since 11/11/2016
@@ -80,11 +81,11 @@ public class UsuarioService {
 			usr = gson.fromJson(json,UsuarioApp.class);
 			String pass = GenerateSHA.getSHA256SecurePassword(usr.getSenha());
 			usr = dao.autenticaUsuario(usr.getEmail(), pass);
-			
+
 			if(usr == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-			
+
 			usr.setSenha(null);
 			return Response.status(200).entity(gson.toJson(usr)).build();
 		}catch (NoResultException e) {
@@ -97,8 +98,8 @@ public class UsuarioService {
 			return Response.status(500).entity(null).build();
 		}
 	}
-	
-	
+
+
 	/**
 	 * @author robertosampaio
 	 * @since 11/11/2016
@@ -121,7 +122,7 @@ public class UsuarioService {
 			if(usuarioApp == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-			
+
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
@@ -131,7 +132,7 @@ public class UsuarioService {
 			return Response.status(500).entity(null).build();
 		}
 	}
-	
+
 	/**
 	 * @author robertosampaio
 	 * @since 11/11/2016
@@ -154,9 +155,9 @@ public class UsuarioService {
 			if(usuarioApp == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-			
+
 			usuarioApp.setSenha(null);
-			
+
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
 		}catch(NoResultException e){
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
@@ -165,8 +166,79 @@ public class UsuarioService {
 		}
 	}
 
-	
-	
+
+
+
+
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @param ID do  Facebook
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@GET
+	@Path("/geraPinSenha/{email}")
+	public Response geraPinSenha(@PathParam("email") String email) {
+		try{
+			UsuarioApp usuarioApp = null;
+			if(email != null){
+				usuarioApp = dao.recuperaUsuarioEmail(email);
+			}
+			if(usuarioApp == null){
+				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+			}
+			Random gerador = new Random(19700621);
+			String numPin="0";
+			//imprime sequência de 10 números inteiros aleatórios entre 0 e 99
+			for (int i = 0; i < 2; i++) {
+				numPin+=gerador.nextInt(26);
+			}
+
+			usuarioApp.setPinSenha(numPin);
+			dao.update(usuarioApp);
+			usuarioApp.setSenha(null);
+
+			return Response.status(200).entity("Foi enviado ao seu email o PIN, digite para recuperar sua senha.").build();			
+		}catch(NoResultException e){
+			return Response.status(404).entity("Usuario não cadastrado").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+
+
+
+	@POST
+	@Path("/recuperaSenhaPorPIN")
+	public Response recuperaSenhaPorPIN(@Context HttpServletRequest request,String json) {
+		UsuarioApp usuarioApp = gson.fromJson(json, UsuarioApp.class);
+		usuarioApp.setDataCadastro(new Date());
+
+		try {
+			UsuarioApp aux = dao.recuperaSenhaPorPIN(usuarioApp.getSenha(),usuarioApp.getPinSenha());
+			if(aux != null){
+				usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
+				dao.update(usuarioApp);
+				usuarioApp.setSenha(null);				
+			}else{
+				return Response.status(404).entity(gson.toJson("Erro ao atualizar senha do usuario!")).build();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao atualizar senha do usuario!")).build();
+		}
+		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
+	}
+
+
+
+
 
 
 
