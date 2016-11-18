@@ -20,21 +20,31 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	@Override
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
 		
-			
+		try {
 			T t = (T) entityManager.find(clazz, id);
 			entityManager.close();
 			return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			entityManager.close();
+			throw new HibernateException(e);
+		}
 		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> listAll(Class<T> clazz) throws HibernateException,Exception{
-		
+		try{
 			
 			List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
 			entityManager.close();
 			return t;
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		entityManager.close();
+		throw new HibernateException(e);
+	}
 		
 	}
 
@@ -87,7 +97,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	protected void commitTransaction() {
-		
+		entityManager.flush();
 		entityManager.getTransaction().commit();
 		
 		
@@ -95,6 +105,12 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	public EntityManager getEntityManager() {
+		if(entityManager == null){
+			if(emf == null){
+				emf = Persistence.createEntityManagerFactory("orion");			
+			}
+			entityManager = emf.createEntityManager();
+		}
 		return entityManager;
 	}
 

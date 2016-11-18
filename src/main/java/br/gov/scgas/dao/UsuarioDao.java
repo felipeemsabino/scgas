@@ -11,22 +11,32 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 	@SuppressWarnings("unchecked")
 	public T recuperaUsuarioPorFacebook(String idFace) throws HibernateException, Exception  {
 
+		try{
+			T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoFacebook").
+					setParameter("idFacebook",idFace).getSingleResult();
 
-		T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoFacebook").
-				setParameter("idFacebook",idFace).getSingleResult();
-
-		return propietario;
+			return propietario;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
 
 
 	}
 	@SuppressWarnings("unchecked")
 	public T recuperaUsuarioPorGmail(String idGmail) throws HibernateException, Exception {
+		try{
 
-
-		T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoGmail").
-				setParameter("idGmail",idGmail).getSingleResult();
-		getEntityManager().close();
-		return propietario;
+			T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoGmail").
+					setParameter("idGmail",idGmail).getSingleResult();
+			getEntityManager().close();
+			return propietario;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
 
 	}
 
@@ -34,30 +44,45 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 	@SuppressWarnings("unchecked")
 	public UsuarioApp  autenticaUsuario(String email,String senha) throws HibernateException, Exception {
 
+		try{
+			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.autentica").setParameter("email",email).setParameter("senha",senha).getSingleResult();
 
-		UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.autentica").setParameter("email",email).setParameter("senha",senha).getSingleResult();
-
-		return usr;
+			return usr;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
 
 	}
 	@SuppressWarnings("unchecked")
 	public UsuarioApp  recuperaUsuarioEmail(String email) throws HibernateException, Exception {
-		
-		
-		UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getSingleResult();
-		
-		return usr;
-		
+
+		try{
+			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getSingleResult();
+
+			return usr;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
+
 	}
 	@SuppressWarnings("unchecked")
 	public UsuarioApp  recuperaSenhaPorPIN(String email,String pinSenha) throws HibernateException, Exception {
-		
-		
-		UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).
-				setParameter("pinSenha",pinSenha).getSingleResult();
-		
-		return usr;
-		
+
+		try{
+			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).
+					setParameter("pinSenha",pinSenha).getSingleResult();
+
+			return usr;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
+
 	}
 
 }
