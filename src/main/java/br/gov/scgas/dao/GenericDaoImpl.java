@@ -22,7 +22,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 		
 		try {
 			T t = (T) entityManager.find(clazz, id);
-			entityManager.close();
+			//entityManager.close();
 			return t;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -38,7 +38,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 		try{
 			
 			List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
-			entityManager.close();
+			//entityManager.close();
 			return t;
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
