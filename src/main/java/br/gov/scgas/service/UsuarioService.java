@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.UsuarioDao;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.GenerateSHA;
+import br.gov.scgas.util.SendEmail;
 
 
 
@@ -119,10 +120,11 @@ public class UsuarioService {
 			if(idParam != null){
 				usuarioApp = dao.recuperaUsuarioPorFacebook(idParam);
 			}
+			
 			if(usuarioApp == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-
+			
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
@@ -202,7 +204,8 @@ public class UsuarioService {
 			usuarioApp.setPinSenha(numPin);
 			dao.update(usuarioApp);
 			usuarioApp.setSenha(null);
-
+			//SendEmail sendEmail=new SendEmail();
+			//sendEmail.generateAndSendEmail(usuarioApp.getEmail(),numPin);
 			return Response.status(200).entity("Foi enviado ao seu email o PIN, digite para recuperar sua senha.").build();			
 		}catch(NoResultException e){
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
@@ -226,12 +229,12 @@ public class UsuarioService {
 				dao.update(usuarioApp);
 				usuarioApp.setSenha(null);				
 			}else{
-				return Response.status(404).entity(gson.toJson("Erro ao atualizar senha do usuario!")).build();
+				return Response.status(404).entity(gson.toJson("PIN de recuperação de senha não encontrado!")).build();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao atualizar senha do usuario!")).build();
+			return Response.status(500).entity(gson.toJson("Erro ao recuperar senha do usuario!")).build();
 		}
 		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
 	}
