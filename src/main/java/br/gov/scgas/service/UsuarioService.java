@@ -196,10 +196,8 @@ public class UsuarioService {
 			}
 			Random gerador = new Random(19700621);
 			String numPin="0";
-			//imprime sequência de 10 números inteiros aleatórios entre 0 e 99
-			for (int i = 0; i < 2; i++) {
-				numPin+=gerador.nextInt(26);
-			}
+			numPin+=gerador.nextInt()*-1;
+			
 
 			usuarioApp.setPinSenha(numPin);
 			dao.update(usuarioApp);
@@ -219,15 +217,15 @@ public class UsuarioService {
 	@POST
 	@Path("/recuperaSenhaPorPIN")
 	public Response recuperaSenhaPorPIN(@Context HttpServletRequest request,String json) {
-		UsuarioApp usuarioApp = gson.fromJson(json, UsuarioApp.class);
-		usuarioApp.setDataCadastro(new Date());
+		UsuarioApp aux = gson.fromJson(json, UsuarioApp.class);
+		aux.setDataCadastro(new Date());
 
 		try {
-			UsuarioApp aux = dao.recuperaSenhaPorPIN(usuarioApp.getSenha(),usuarioApp.getPinSenha());
+			 aux = dao.recuperaSenhaPorPIN(aux.getEmail(),aux.getPinSenha());
 			if(aux != null){
-				usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
-				dao.update(usuarioApp);
-				usuarioApp.setSenha(null);				
+				aux.setPinSenha(null);				
+				dao.update(aux);
+				aux.setSenha(null);				
 			}else{
 				return Response.status(404).entity(gson.toJson("PIN de recuperação de senha não encontrado!")).build();
 			}
@@ -236,7 +234,7 @@ public class UsuarioService {
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao recuperar senha do usuario!")).build();
 		}
-		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
+		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
 
 

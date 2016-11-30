@@ -73,7 +73,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 	public UsuarioApp  recuperaSenhaPorPIN(String email,String pinSenha) throws HibernateException, Exception {
 
 		try{
-			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).
+			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaSenhaPorPIN").setParameter("email",email).
 					setParameter("pinSenha",pinSenha).getSingleResult();
 			//getEntityManager().close();
 			return usr;

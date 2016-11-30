@@ -68,6 +68,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 			beginTransaction();
 			entityManager.merge(entity);
 			commitTransaction();
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			closeConnection();

@@ -25,12 +25,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.36</version>
 		</dependency>
-		<!-- postGreeSQL -->
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
-			<groupId>postgresql</groupId>
+			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.1-901-1.jdbc4</version>
+			<version>9.4-1201-jdbc41</version>
 		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-spatial -->
 		<dependency>
@@ -199,8 +200,8 @@
 						<phase>integration-test</phase>
 						<configuration>
 							<tasks>
-								<copy file="target/${pom.project.build.finalName}.war"
-									tofile="${tomcat.dir}/${pom.project.build.finalName}.war" />
+								<copy file="target/scgas.war"
+									tofile="/Users/nadal/Documents/Estrategos/apache-tomcat-8.0.38/webapps/scgas.war" />
 							</tasks>
 						</configuration>
 						<goals>
