@@ -21,12 +21,12 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
 		
 		try {
-			T t = (T) entityManager.find(clazz, id);
-			//entityManager.close();
+			T t = (T) getEntityManager().find(clazz, id);
+			entityManager.close();
 			return t;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			entityManager.close();
+			//entityManager.close();
 			throw new HibernateException(e);
 		}
 		
@@ -37,8 +37,8 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public List<T> listAll(Class<T> clazz) throws HibernateException,Exception{
 		try{
 			
-			List<T> t = entityManager.createQuery(("FROM " + clazz.getName())).getResultList();
-			//entityManager.close();
+			List<T> t = getEntityManager().createQuery(("FROM " + clazz.getName())).getResultList();
+			entityManager.close();
 			return t;
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
@@ -53,7 +53,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 		try {
 
 			beginTransaction();
-			entityManager.persist(entity);
+			getEntityManager().persist(entity);
 			commitTransaction();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -66,7 +66,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public void update(T entity) throws HibernateException,Exception{
 		try {
 			beginTransaction();
-			entityManager.merge(entity);
+			getEntityManager().merge(entity);
 			commitTransaction();
 		
 		} catch (Exception e) {
@@ -80,7 +80,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public void delete(T entity) throws HibernateException,Exception{
 		try {
 			beginTransaction();
-			entityManager.remove(entity);
+			getEntityManager().remove(entity);
 			commitTransaction();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -98,8 +98,9 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	protected void commitTransaction() {
-		entityManager.flush();
+		
 		entityManager.getTransaction().commit();
+		entityManager.close();
 		
 		
 	
@@ -120,7 +121,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 	
 	protected void closeConnection() throws HibernateException, Exception {
-		
+		entityManager.flush();
 		entityManager.getTransaction().rollback();			
 		entityManager.close();
 		

@@ -5,8 +5,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
  version="1.0">
 <persistence-unit name="orion" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>java:comp/env/jdbc/scgas</jta-data-source>
         <properties>
-            <property name="hibernate.connection.datasource" value="java:comp/env/jdbc/scgas"/>
+            <!-- property name="hibernate.connection.datasource" value="java:comp/env/jdbc/scgas"/ -->
             <property name="hibernate.dialect" value="org.hibernate.spatial.dialect.postgis.PostgisDialect" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.show_sql" value="true" />

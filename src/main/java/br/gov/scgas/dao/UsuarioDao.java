@@ -14,7 +14,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 		try{
 			T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoFacebook").
 					setParameter("idFacebook",idFace).getSingleResult();
-			//getEntityManager().close();
+			getEntityManager().close();
 			return propietario;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -30,7 +30,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 
 			T propietario =  (T) getEntityManager().createNamedQuery("UsuarioApp.autenticacaoGmail").
 					setParameter("idGmail",idGmail).getSingleResult();
-			//getEntityManager().close();
+			getEntityManager().close();
 			return propietario;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -60,7 +60,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 
 		try{
 			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getSingleResult();
-			//getEntityManager().close();
+			getEntityManager().close();
 			return usr;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -75,7 +75,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 		try{
 			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaSenhaPorPIN").setParameter("email",email).
 					setParameter("pinSenha",pinSenha).getSingleResult();
-			//getEntityManager().close();
+			getEntityManager().close();
 			return usr;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
