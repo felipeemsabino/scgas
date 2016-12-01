@@ -46,7 +46,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 
 		try{
 			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.autentica").setParameter("email",email).setParameter("senha",senha).getSingleResult();
-			//getEntityManager().close();
+			getEntityManager().close();
 			return usr;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

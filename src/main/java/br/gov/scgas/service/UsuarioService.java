@@ -25,7 +25,6 @@ import br.gov.scgas.util.SendEmail;
 @Path("/usuarioservice")
 public class UsuarioService {
 
-	private String say;
 
 	@Inject
 	private UsuarioDao<UsuarioApp, Long> dao;

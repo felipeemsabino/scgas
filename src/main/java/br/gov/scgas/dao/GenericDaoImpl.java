@@ -26,7 +26,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 			return t;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//entityManager.close();
+			entityManager.close();
 			throw new HibernateException(e);
 		}
 		
