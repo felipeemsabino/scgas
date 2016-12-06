@@ -29,7 +29,7 @@ public class SendEmail {
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 		generateMailMessage = new MimeMessage(getMailSession);
 		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(emailDestinatario));
-		generateMailMessage.setSubject("Greetings from Crunchify..");
+		generateMailMessage.setSubject("SCGAS-Requisição de Recuperação de Senha.");
 		String emailBody = "Requisição de Recuperação de Senha. " + "<br><br>GNV APP"+"<br><br>PIN de recuperação:"+pinSenha;
 		generateMailMessage.setContent(emailBody, "text/html");
 		System.out.println("Mail Session has been created successfully..");
@@ -40,7 +40,7 @@ public class SendEmail {
  
 		// Enter your correct gmail UserID and Password
 		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("smtp.gmail.com", "xxxxx", "xxxxxx");
+		transport.connect("smtp.gmail.com", "contatoscgas", "5cg45123");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}

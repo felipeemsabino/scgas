@@ -197,7 +197,7 @@ public class UsuarioService {
 			if(usuarioApp == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-			Random gerador = new Random(19700621);
+			Random gerador = new Random(new Date().getTime());
 			String numPin="0";
 			numPin+=gerador.nextInt()*-1;
 			
@@ -205,12 +205,14 @@ public class UsuarioService {
 			usuarioApp.setPinSenha(numPin);
 			dao.update(usuarioApp);
 			usuarioApp.setSenha(null);
-			//SendEmail sendEmail=new SendEmail();
-			//sendEmail.generateAndSendEmail(usuarioApp.getEmail(),numPin);
+			SendEmail sendEmail=new SendEmail();
+			sendEmail.generateAndSendEmail(usuarioApp.getEmail(),numPin);
 			return Response.status(200).entity("Foi enviado ao seu email o PIN, digite para recuperar sua senha.").build();			
 		}catch(HibernateException e){
+			e.printStackTrace();
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
 		}catch(Exception e){
+			e.printStackTrace();
 			return Response.status(500).entity(null).build();
 		}
 	}

@@ -59,7 +59,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 	public UsuarioApp  recuperaUsuarioEmail(String email) throws HibernateException, Exception {
 
 		try{
-			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getSingleResult();
+			UsuarioApp usr =  (UsuarioApp) getEntityManager().createNamedQuery("UsuarioApp.recuperaUsuarioEmail").setParameter("email",email).getResultList().get(0);
 			getEntityManager().close();
 			return usr;
 		} catch (Exception e) {
