@@ -13,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.hibernate.HibernateException;
+
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.UsuarioDao;
@@ -127,7 +129,7 @@ public class UsuarioService {
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
-		}catch(NoResultException e){
+		}catch(HibernateException e){
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
@@ -160,7 +162,7 @@ public class UsuarioService {
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
-		}catch(NoResultException e){
+		}catch(HibernateException e){
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
@@ -204,7 +206,7 @@ public class UsuarioService {
 			//SendEmail sendEmail=new SendEmail();
 			//sendEmail.generateAndSendEmail(usuarioApp.getEmail(),numPin);
 			return Response.status(200).entity("Foi enviado ao seu email o PIN, digite para recuperar sua senha.").build();			
-		}catch(NoResultException e){
+		}catch(HibernateException e){
 			return Response.status(404).entity("Usuario não cadastrado").build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
