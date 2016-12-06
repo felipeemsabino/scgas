@@ -43,7 +43,9 @@ public class UsuarioService {
 
 		try {
 			if(usuarioApp.getId() == null){
-				usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));
+				if(usuarioApp.getSenha() != null){
+					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));					
+				}
 				dao.save(usuarioApp);
 				usuarioApp.setSenha(null);
 			}else{
