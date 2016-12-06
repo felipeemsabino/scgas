@@ -92,7 +92,7 @@ public class UsuarioService {
 
 			usr.setSenha(null);
 			return Response.status(200).entity(gson.toJson(usr)).build();
-		}catch (NoResultException e) {
+		}catch (HibernateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Response.status(404).entity("Usuario não cadastrado").build();

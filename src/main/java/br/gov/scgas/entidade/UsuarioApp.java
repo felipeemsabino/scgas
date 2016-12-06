@@ -47,7 +47,7 @@ public class UsuarioApp implements Serializable{
 	@Column(name="NOME_USUARIO", nullable = false, length = 100) 
 	private String nome;
 	
-	@Column(name="EMAIL",nullable=true,length = 100,unique = true)
+	@Column(name="EMAIL",nullable=true,length = 100)
 	private String email;
 	
 	@Column(name="SENHA", nullable = true, length = 200) 
