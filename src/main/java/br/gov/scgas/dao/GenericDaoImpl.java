@@ -19,7 +19,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 
 	@Override
 	public T getById(Class<T> clazz, ID id) throws HibernateException,Exception {
-		
+
 		try {
 			T t = (T) getEntityManager().find(clazz, id);
 			entityManager.close();
@@ -29,23 +29,23 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 			entityManager.close();
 			throw new HibernateException(e);
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> listAll(Class<T> clazz) throws HibernateException,Exception{
 		try{
-			
+
 			List<T> t = getEntityManager().createQuery(("FROM " + clazz.getName())).getResultList();
 			entityManager.close();
 			return t;
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		entityManager.close();
-		throw new HibernateException(e);
-	}
-		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			entityManager.close();
+			throw new HibernateException(e);
+		}
+
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 			beginTransaction();
 			getEntityManager().merge(entity);
 			commitTransaction();
-		
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			closeConnection();
@@ -98,16 +98,16 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	protected void commitTransaction() {
-		
+
 		entityManager.getTransaction().commit();
 		entityManager.close();
-		
-		
-	
+
+
+
 	}
 
 	public EntityManager getEntityManager() {
-		if(entityManager == null){
+		if(entityManager == null || !entityManager.isOpen()){
 			if(emf == null){
 				emf = Persistence.createEntityManagerFactory("orion");			
 			}
@@ -119,10 +119,15 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	protected void closeConnection() throws HibernateException, Exception {
 		entityManager.flush();
 		entityManager.getTransaction().rollback();			
+		entityManager.close();
+
+	}
+	public void closeDao() throws HibernateException, Exception {
+			
 		entityManager.close();
 		
 	}
