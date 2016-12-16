@@ -37,11 +37,13 @@ public class PostoService {
 	 * 200 (OK, registro encontrado)
 	 * 404 (Registro não encontrado)
 	 * 500 (Exception lancada por algum motivo)
+	 * @throws Exception 
+	 * @throws HibernateException 
 	 * 
 	 **/
 	@GET
 	@Path("/listaPostos/{initialPosition}/{finalPosition}")
-	public Response listaPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) {
+	public Response listaPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) throws HibernateException, Exception {
 		try{
 			List<Posto> listaPostos= new ArrayList<Posto>();
 			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
@@ -57,6 +59,7 @@ public class PostoService {
 		}catch(HibernateException e){
 			return Response.status(404).entity("Erro ao recuperar Postos.").build();																							
 		}catch(Exception e){
+			dao.closeDao();
 			return Response.status(500).entity(null).build();
 		}
 	}

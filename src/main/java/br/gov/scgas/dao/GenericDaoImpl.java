@@ -127,8 +127,9 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 
 	}
 	public void closeDao() throws HibernateException, Exception {
-			
-		entityManager.close();
+		if(entityManager != null && entityManager.isOpen()){
+			entityManager.close();			
+		}
 		
 	}
 
