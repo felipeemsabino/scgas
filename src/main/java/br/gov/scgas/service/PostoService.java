@@ -1,6 +1,7 @@
 package br.gov.scgas.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,8 +52,18 @@ public class PostoService {
 			for (Posto posto : listaPostos) {
 				for (PrecoGNV prc : posto.getListaPrecosGNV()) {
 					prc.setPosto(null);
+					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
+				    long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
+				    
+				    if(diferencaHoras >= 24){
+				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dias atrás");
+				    }else{
+				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " horas atrás");			    	
+				    }
 				}
+				
 			}
+			
 			String json = gson.toJson(listaPostos);
 			dao.closeDao();
 			return Response.status(200).entity(json).build();			

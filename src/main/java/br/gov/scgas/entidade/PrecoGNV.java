@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="TB_PRECO_GNV") 
@@ -35,6 +36,15 @@ public class PrecoGNV implements Serializable {
 	@JoinColumn(name="ID_USUARIO",referencedColumnName="ID") 
 	private UsuarioApp usuario;
 	
+	@Transient
+	private String tempoUltimaAtulizacao;
+	
+	public String getTempoUltimaAtulizacao() {
+		return tempoUltimaAtulizacao;
+	}
+	public void setTempoUltimaAtulizacao(String tempoUltimaAtulizacao) {
+		this.tempoUltimaAtulizacao = tempoUltimaAtulizacao;
+	}
 	public UsuarioApp getUsuario() {
 		return usuario;
 	}

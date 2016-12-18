@@ -14,9 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="TB_POSTO") 
@@ -29,6 +31,15 @@ public class Posto implements Serializable{
 	@Column(name="NOME", nullable = false, length = 100,unique = true) 
 	private String nome;
 	
+	@Column(name="ENDERECO", nullable = false, length = 200,unique = true) 
+	private String endereco;
+	
+	public String getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATA_CAD",nullable = false, length = 11) 
 	private Date dataCadastro;
@@ -47,8 +58,18 @@ public class Posto implements Serializable{
 	private String numImovel;
 	
 	@OneToMany(cascade = CascadeType.ALL, targetEntity = PrecoGNV.class,fetch= FetchType.LAZY ,mappedBy = "posto")
+	@OrderBy("DATA_HORA_CAD desc")
 	private List<PrecoGNV> listaPrecosGNV;
 	
+	@Transient
+	private String tempoUltimaAtulizacao;
+	
+	public String getTempoUltimaAtulizacao() {
+		return tempoUltimaAtulizacao;
+	}
+	public void setTempoUltimaAtulizacao(String tempoUltimaAtulizacao) {
+		this.tempoUltimaAtulizacao = tempoUltimaAtulizacao;
+	}
 	public List<PrecoGNV> getListaPrecosGNV() {
 		return listaPrecosGNV;
 	}
