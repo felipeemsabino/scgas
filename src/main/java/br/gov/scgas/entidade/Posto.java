@@ -64,7 +64,16 @@ public class Posto implements Serializable{
 	@Transient
 	private String tempoUltimaAtulizacao;
 	
+	@Transient
+	private String distanciaPosto;
 	
+	
+	public String getDistanciaPosto() {
+		return distanciaPosto;
+	}
+	public void setDistanciaPosto(String distanciaPosto) {
+		this.distanciaPosto = distanciaPosto;
+	}
 	public String getTempoUltimaAtulizacao() {
 		return tempoUltimaAtulizacao;
 	}
