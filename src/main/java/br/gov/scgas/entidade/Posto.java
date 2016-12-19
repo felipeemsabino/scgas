@@ -64,6 +64,7 @@ public class Posto implements Serializable{
 	@Transient
 	private String tempoUltimaAtulizacao;
 	
+	
 	public String getTempoUltimaAtulizacao() {
 		return tempoUltimaAtulizacao;
 	}

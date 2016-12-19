@@ -1,5 +1,6 @@
 package br.gov.scgas.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,25 +47,34 @@ public class PostoService {
 	@Path("/listaPostos/{initialPosition}/{finalPosition}")
 	public Response listaPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) throws HibernateException, Exception {
 		try{
-			List<Posto> listaPostos= new ArrayList<Posto>();
+			List listaPostos= new ArrayList();
 			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
 			
-			for (Posto posto : listaPostos) {
+			for (Posto posto : (List<Posto>)listaPostos) {
 				for (PrecoGNV prc : posto.getListaPrecosGNV()) {
 					prc.setPosto(null);
 					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
 				    long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
 				    
 				    if(diferencaHoras >= 24){
-				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dias atrás");
+				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dia(s) atrás");
 				    }else{
-				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " horas atrás");			    	
+				    	prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
 				    }
 				}
 				
 			}
 			
+			BigInteger contador = dao.contaLinhas();
+			
+			if(contador.longValue() <= new Long(finalPosition) ){
+				listaPostos.add("{hasMore:"+0+"}");
+			}else{
+				listaPostos.add("{hasMore:"+1+"}");				
+			}
+			
 			String json = gson.toJson(listaPostos);
+			
 			dao.closeDao();
 			return Response.status(200).entity(json).build();			
 		}catch(HibernateException e){
