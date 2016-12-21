@@ -1,6 +1,5 @@
 package br.gov.scgas.service;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +21,6 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.PostoDao;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
-import br.gov.scgas.entidade.UsuarioApp;
 
 
 
@@ -35,35 +33,6 @@ public class PostoService {
 
 	@Inject
 	private PostoDao<PrecoGNV, Long> daoPrecoPosto;
-
-	public PostoDao<Posto, Long> getDao() {
-		return dao;
-	}
-
-
-	public void setDao(PostoDao<Posto, Long> dao) {
-		this.dao = dao;
-	}
-
-
-	public PostoDao<PrecoGNV, Long> getDaoPrecoPosto() {
-		return daoPrecoPosto;
-	}
-
-
-	public void setDaoPrecoPosto(PostoDao<PrecoGNV, Long> daoPrecoPosto) {
-		this.daoPrecoPosto = daoPrecoPosto;
-	}
-
-
-	public Gson getGson() {
-		return gson;
-	}
-
-
-	public void setGson(Gson gson) {
-		this.gson = gson;
-	}
 
 
 	@Inject
@@ -101,7 +70,11 @@ public class PostoService {
 					}else{
 						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
 					}
-					prc.setUsuario(null);
+					prc.getUsuario().setSenha(null);
+					prc.getUsuario().setEmail(null);
+					prc.getUsuario().setTokenFacebook(null);
+					prc.getUsuario().setTokenGmail(null);
+					prc.getUsuario().setDataCadastro(null);
 				}
 
 				//Pega distancia
@@ -167,19 +140,48 @@ public class PostoService {
 		price.setUsuario(usr);
 		price.setPosto(posto);
 		price.setValorGNV(new BigDecimal("2.599"));
-		
+
 		String rst = getGson().toJson(price);*/
-		
+
 
 		try {
 			daoPrecoPosto.save(price);
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao atualizar preço.")).build();
 		}
 		return Response.status(200).entity(gson.toJson(price)).build();
+	}
+
+	public PostoDao<Posto, Long> getDao() {
+		return dao;
+	}
+
+
+	public void setDao(PostoDao<Posto, Long> dao) {
+		this.dao = dao;
+	}
+
+
+	public PostoDao<PrecoGNV, Long> getDaoPrecoPosto() {
+		return daoPrecoPosto;
+	}
+
+
+	public void setDaoPrecoPosto(PostoDao<PrecoGNV, Long> daoPrecoPosto) {
+		this.daoPrecoPosto = daoPrecoPosto;
+	}
+
+
+	public Gson getGson() {
+		return gson;
+	}
+
+
+	public void setGson(Gson gson) {
+		this.gson = gson;
 	}
 
 
