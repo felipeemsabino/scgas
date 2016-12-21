@@ -39,6 +39,11 @@ public class PrecoGNV implements Serializable {
 	@Transient
 	private String tempoUltimaAtulizacao;
 	
+	@Column(name="valorgnv",nullable = false, length = 10,precision=10,scale=3) 
+	private BigDecimal valorGNV;
+	
+	
+	
 	public String getTempoUltimaAtulizacao() {
 		return tempoUltimaAtulizacao;
 	}
@@ -51,7 +56,7 @@ public class PrecoGNV implements Serializable {
 	public void setUsuario(UsuarioApp usuario) {
 		this.usuario = usuario;
 	}
-	private BigDecimal valorGNV;
+	
 	
 	public Long getId() {
 		return id;

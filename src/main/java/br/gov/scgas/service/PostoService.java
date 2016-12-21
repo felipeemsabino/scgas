@@ -1,14 +1,18 @@
 package br.gov.scgas.service;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.hibernate.HibernateException;
@@ -18,6 +22,7 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.PostoDao;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
+import br.gov.scgas.entidade.UsuarioApp;
 
 
 
@@ -27,6 +32,39 @@ public class PostoService {
 
 	@Inject
 	private PostoDao<Posto, Long> dao;
+
+	@Inject
+	private PostoDao<PrecoGNV, Long> daoPrecoPosto;
+
+	public PostoDao<Posto, Long> getDao() {
+		return dao;
+	}
+
+
+	public void setDao(PostoDao<Posto, Long> dao) {
+		this.dao = dao;
+	}
+
+
+	public PostoDao<PrecoGNV, Long> getDaoPrecoPosto() {
+		return daoPrecoPosto;
+	}
+
+
+	public void setDaoPrecoPosto(PostoDao<PrecoGNV, Long> daoPrecoPosto) {
+		this.daoPrecoPosto = daoPrecoPosto;
+	}
+
+
+	public Gson getGson() {
+		return gson;
+	}
+
+
+	public void setGson(Gson gson) {
+		this.gson = gson;
+	}
+
 
 	@Inject
 	private Gson gson;
@@ -56,11 +94,14 @@ public class PostoService {
 					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
 					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
 
-					if(diferencaHoras >= 24){
+					if(diferencaHoras <= 0){
+						prc.setTempoUltimaAtulizacao("Atualizado a menos de uma hora atrás");
+					}else if(diferencaHoras >= 24){
 						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dia(s) atrás");
 					}else{
 						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
 					}
+					prc.setUsuario(null);
 				}
 
 				//Pega distancia
@@ -113,6 +154,34 @@ public class PostoService {
 
 		return dist;
 	}
+
+	@POST
+	@Path("/atualizaPrecoCombustivel")
+	public Response recuperaSenhaPorPIN(@Context HttpServletRequest request,String json) {
+		PrecoGNV price = gson.fromJson(json, PrecoGNV.class);
+		price.setDataHoraCadastro(new Date());
+		/**UsuarioApp usr = new UsuarioApp();
+		usr.setId(new Long(435));
+		Posto posto=new Posto();
+		posto.setId(new Long(1));
+		price.setUsuario(usr);
+		price.setPosto(posto);
+		price.setValorGNV(new BigDecimal("2.599"));
+		
+		String rst = getGson().toJson(price);*/
+		
+
+		try {
+			daoPrecoPosto.save(price);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao atualizar preço.")).build();
+		}
+		return Response.status(200).entity(gson.toJson(price)).build();
+	}
+
 
 
 
