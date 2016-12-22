@@ -58,7 +58,8 @@ public class PostoService {
 			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
 
 			for (Posto posto : (List<Posto>)listaPostos) {
-				for (PrecoGNV prc : posto.getListaPrecosGNV()) {
+				if(posto.getListaPrecosGNV() != null && !posto.getListaPrecosGNV().isEmpty()){
+					PrecoGNV prc = posto.getListaPrecosGNV().get(0);
 					prc.setPosto(null);
 					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
 					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
@@ -75,8 +76,11 @@ public class PostoService {
 					prc.getUsuario().setTokenFacebook(null);
 					prc.getUsuario().setTokenGmail(null);
 					prc.getUsuario().setDataCadastro(null);
+					
+					posto.getListaPrecosGNV().clear();
+					posto.getListaPrecosGNV().add(prc);
 				}
-
+				
 				//Pega distancia
 				Float distancia = (float) Math.round(distFrom(new Float(x.replace(",", ".")),new Float(y.replace(",", ".")), new Float(posto.getCoordenadaX().replace(",", ".")),new Float(posto.getCoordenadaY().replace(",", "."))));
 				if(distancia > 1000){
