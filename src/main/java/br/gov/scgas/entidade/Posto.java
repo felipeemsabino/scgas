@@ -1,6 +1,7 @@
 package br.gov.scgas.entidade;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name="TB_POSTO") 
-public class Posto implements Serializable{
+public class Posto implements Serializable,Comparable<Posto>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, length = 20)
@@ -66,6 +67,9 @@ public class Posto implements Serializable{
 	
 	@Transient
 	private String distanciaPosto;
+	
+	@Transient
+	private Float distanciaParaOdernar;
 	
 	
 	public String getDistanciaPosto() {
@@ -125,9 +129,24 @@ public class Posto implements Serializable{
 	public String getNumImovel() {
 		return numImovel;
 	}
+	public Float getDistanciaParaOdernar() {
+		return distanciaParaOdernar;
+	}
+	public void setDistanciaParaOdernar(Float distanciaParaOdernar) {
+		this.distanciaParaOdernar = distanciaParaOdernar;
+	}
 	public void setNumImovel(String numImovel) {
 		this.numImovel = numImovel;
 	}
+	
+	
+	@Override
+	public int compareTo(Posto o) {
+		// TODO Auto-generated method stub
+		
+		return distanciaParaOdernar.compareTo(o.getDistanciaParaOdernar());
+	}
+	
 	
 
 }

@@ -2,6 +2,8 @@ package br.gov.scgas.service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +20,9 @@ import org.hibernate.HibernateException;
 
 import com.google.gson.Gson;
 
+import br.gov.scgas.dao.BandeiraPostoDao;
 import br.gov.scgas.dao.PostoDao;
+import br.gov.scgas.entidade.BandeiraPosto;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
 
@@ -34,6 +38,8 @@ public class PostoService {
 	@Inject
 	private PostoDao<PrecoGNV, Long> daoPrecoPosto;
 
+	@Inject
+	private BandeiraPostoDao<BandeiraPosto, Long> daoB;
 
 	@Inject
 	private Gson gson;
@@ -50,6 +56,7 @@ public class PostoService {
 	 * @throws HibernateException 
 	 * 
 	 **/
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/listaPostos/{initialPosition}/{finalPosition}/{x}/{y}")
 	public Response listaPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition,@PathParam("x") String x,@PathParam("y") String y) throws HibernateException, Exception {
@@ -83,6 +90,7 @@ public class PostoService {
 				
 				//Pega distancia
 				Float distancia = (float) Math.round(distFrom(new Float(x.replace(",", ".")),new Float(y.replace(",", ".")), new Float(posto.getCoordenadaX().replace(",", ".")),new Float(posto.getCoordenadaY().replace(",", "."))));
+				posto.setDistanciaParaOdernar(distancia);
 				if(distancia > 1000){
 					posto.setDistanciaPosto(distancia/1000+"KM");
 				}else{
@@ -91,7 +99,7 @@ public class PostoService {
 
 
 			}
-
+			Collections.sort(listaPostos);
 			BigInteger contador = dao.contaLinhas();
 
 			if(contador.longValue() <= new Long(finalPosition) ){
@@ -158,6 +166,33 @@ public class PostoService {
 		}
 		return Response.status(200).entity(gson.toJson(price)).build();
 	}
+	
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @param ID do  Facebook
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@GET
+	@Path("/listaBandeiras")
+	public Response listaBandeiras() {
+		try{
+			List<BandeiraPosto> bandeiraPostos = new ArrayList<BandeiraPosto>();
+			bandeiraPostos = daoB.listAll(BandeiraPosto.class);
+			
+			return Response.status(200).entity(gson.toJson(bandeiraPostos)).build();			
+		}catch(HibernateException e){
+			return Response.status(404).entity("Registro não encontrado.").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+
 
 	public PostoDao<Posto, Long> getDao() {
 		return dao;

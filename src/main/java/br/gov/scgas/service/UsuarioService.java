@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Random;
 
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,6 +29,8 @@ public class UsuarioService {
 
 	@Inject
 	private UsuarioDao<UsuarioApp, Long> dao;
+	
+	
 
 	@Inject
 	private Gson gson;
@@ -241,7 +242,9 @@ public class UsuarioService {
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
-
+	
+	
+	
 
 
 
