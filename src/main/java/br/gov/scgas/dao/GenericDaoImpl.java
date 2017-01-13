@@ -80,6 +80,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	public void delete(T entity) throws HibernateException,Exception{
 		try {
 			beginTransaction();
+			entity = getEntityManager().merge(entity);
 			getEntityManager().remove(entity);
 			commitTransaction();
 		} catch (Exception e) {

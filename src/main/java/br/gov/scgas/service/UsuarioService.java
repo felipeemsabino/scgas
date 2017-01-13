@@ -202,6 +202,9 @@ public class UsuarioService {
 			String numPin="0";
 			numPin+=gerador.nextInt()*-1;
 			
+			if(numPin.length() > 4){
+				numPin = numPin.substring(0,4);
+			}
 
 			usuarioApp.setPinSenha(numPin);
 			dao.update(usuarioApp);
@@ -242,6 +245,8 @@ public class UsuarioService {
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
+	
+	
 	
 	
 	
