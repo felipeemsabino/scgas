@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -68,6 +70,20 @@ public class UsuarioApp implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATA_CAD",nullable = false, length = 11) 
 	private Date dataCadastro;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="ATIVO", nullable = true)
+	private SimNao ativo;
+
+	public SimNao getAtivo() {
+		return ativo;
+	}
+
+
+	public void setAtivo(SimNao ativo) {
+		this.ativo = ativo;
+	}
+
 
 	public Date getDataCadastro() {
 		return dataCadastro;

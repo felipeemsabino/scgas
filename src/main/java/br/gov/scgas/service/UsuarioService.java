@@ -30,8 +30,6 @@ public class UsuarioService {
 	@Inject
 	private UsuarioDao<UsuarioApp, Long> dao;
 	
-	
-
 	@Inject
 	private Gson gson;
 
@@ -56,15 +54,18 @@ public class UsuarioService {
 				}else{
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
 				}
-
+				
 				dao.update(usuarioApp);
 				usuarioApp.setSenha(null);
 			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar usuario!")).build();
 		}
+		
 		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
 	}
 

@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.BandeiraPostoDao;
 import br.gov.scgas.dao.PostoDao;
 import br.gov.scgas.entidade.BandeiraPosto;
+import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
 
@@ -43,6 +44,82 @@ public class PostoService {
 
 	@Inject
 	private Gson gson;
+	
+	
+	@POST
+	@Path("/cadastrarPosto")
+	public Response cadastrarPosto(@Context HttpServletRequest request,String json) {
+		Posto posto = gson.fromJson(json, Posto.class);
+		posto.setDataCadastro(new Date());
+		
+		try {
+			if(posto.getId() == null){
+				dao.save(posto);
+			}else{
+				dao.update(posto);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao criar Posto!")).build();
+		}
+		
+		return Response.status(200).entity(gson.toJson(posto)).build();
+	}
+	@POST
+	@Path("/cadastrarBandeiraPosto")
+	public Response cadastrarBandeiraPosto(@Context HttpServletRequest request,String json) {
+		BandeiraPosto bandeiraPosto = gson.fromJson(json, BandeiraPosto.class);
+		bandeiraPosto.setDataCadastro(new Date());
+		
+		try {
+			if(bandeiraPosto.getId() == null){
+				daoB.save(bandeiraPosto);
+			}else{
+				daoB.update(bandeiraPosto);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao criar Bandeira Posto!")).build();
+		}
+		
+		return Response.status(200).entity(gson.toJson(bandeiraPosto)).build();
+	}
+	
+	
+	/**
+	 * @author robertosampaio
+	 * @since 05/02/2017
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@GET
+	@Path("/listaTodasBandeiras")
+	public Response listaTodasBandeiras() {
+		try{
+			List<BandeiraPosto> listaBandeiras = new ArrayList<BandeiraPosto>();
+			listaBandeiras = daoB.listAll(BandeiraPosto.class);
+			return Response.status(200).entity(gson.toJson(listaBandeiras)).build();			
+		}catch(HibernateException e){
+			return Response.status(404).entity("Registro não encontrado.").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+
+
+	
+	
+	
 
 	/**
 	 * @author robertosampaio

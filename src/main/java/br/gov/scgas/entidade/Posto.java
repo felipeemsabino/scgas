@@ -1,13 +1,14 @@
 package br.gov.scgas.entidade;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,12 +36,7 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Column(name="ENDERECO", nullable = false, length = 200,unique = true) 
 	private String endereco;
 	
-	public String getEndereco() {
-		return endereco;
-	}
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATA_CAD",nullable = false, length = 11) 
 	private Date dataCadastro;
@@ -62,6 +58,13 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@OrderBy("DATA_HORA_CAD desc")
 	private List<PrecoGNV> listaPrecosGNV;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name="ATIVO", nullable = true)
+	private SimNao ativo;
+	
+	
+
+
 	@Transient
 	private String tempoUltimaAtulizacao;
 	
@@ -70,6 +73,13 @@ public class Posto implements Serializable,Comparable<Posto>{
 	
 	@Transient
 	private Float distanciaParaOdernar;
+	
+	public String getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
 	
 	
 	public String getDistanciaPosto() {
@@ -137,6 +147,13 @@ public class Posto implements Serializable,Comparable<Posto>{
 	}
 	public void setNumImovel(String numImovel) {
 		this.numImovel = numImovel;
+	}
+	
+	public SimNao getAtivo() {
+		return ativo;
+	}
+	public void setAtivo(SimNao ativo) {
+		this.ativo = ativo;
 	}
 	
 	

@@ -36,7 +36,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 				
 				.getSingleResult();
 	 
-		
+	  getEntityManager().close();
 		return total;
 	}
 	
