@@ -23,7 +23,7 @@ import br.gov.scgas.entidade.UsuarioApp;
 
 
 
-@Path("/usuarioservice")
+@Path("/noticiasservice")
 public class NoticiasService {
 
 
@@ -39,7 +39,6 @@ public class NoticiasService {
 	public Response cadastrarNoticias(@Context HttpServletRequest request,String json) {
 		Noticias noticias = gson.fromJson(json, Noticias.class);
 		noticias.setDataCadastro(new Date());
-
 		try {
 			if(noticias.getId() == null){
 				dao.save(noticias);
@@ -73,6 +72,7 @@ public class NoticiasService {
 		try{
 			List<Noticias> listaNoticias = new ArrayList<Noticias>();
 			listaNoticias = dao.listAll(Noticias.class);
+			
 			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
 		}catch(HibernateException e){
 			return Response.status(404).entity("Registro não encontrado.").build();																							

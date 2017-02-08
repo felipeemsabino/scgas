@@ -74,6 +74,20 @@ public class UsuarioApp implements Serializable{
 	@Enumerated(EnumType.STRING)
 	@Column(name="ATIVO", nullable = true)
 	private SimNao ativo;
+	
+	@Column(name="TK_NOTIFICACAO", nullable = true, length = 200,unique = true) 
+	private String tokenNotificacao;
+
+
+	public String getTokenNotificacao() {
+		return tokenNotificacao;
+	}
+
+
+	public void setTokenNotificacao(String tokenNotificacao) {
+		this.tokenNotificacao = tokenNotificacao;
+	}
+
 
 	public SimNao getAtivo() {
 		return ativo;

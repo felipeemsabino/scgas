@@ -15,7 +15,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 	public List<Posto> listAllPosto(Long initPosition,Long finalPosition) throws HibernateException,Exception{
 		try{
 
-			List<Posto> t = getEntityManager().createQuery("select obj from Posto obj ").setFirstResult(initPosition.intValue()).setMaxResults(finalPosition.intValue()).
+			List<Posto> t = getEntityManager().createQuery("select obj from Posto obj where obj.ativo = 'S' ").setFirstResult(initPosition.intValue()).setMaxResults(finalPosition.intValue()).
 					getResultList();
 			
 			return t;

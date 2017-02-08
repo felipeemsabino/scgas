@@ -36,7 +36,6 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Column(name="ENDERECO", nullable = false, length = 200,unique = true) 
 	private String endereco;
 	
-	
 	@Temporal(TemporalType.DATE)
 	@Column(name="DATA_CAD",nullable = false, length = 11) 
 	private Date dataCadastro;
@@ -62,9 +61,6 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Column(name="ATIVO", nullable = true)
 	private SimNao ativo;
 	
-	
-
-
 	@Transient
 	private String tempoUltimaAtulizacao;
 	

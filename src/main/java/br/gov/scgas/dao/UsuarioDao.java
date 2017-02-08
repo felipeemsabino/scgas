@@ -1,9 +1,11 @@
 package br.gov.scgas.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.HibernateException;
 
+import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.UsuarioApp;
 
 public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID> {
@@ -79,6 +81,22 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 			return usr;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
+
+	}
+	
+	public List<UsuarioApp> listAllUsr(Long initPosition,Long finalPosition) throws HibernateException,Exception{
+		try{
+
+			List<UsuarioApp> t = getEntityManager().createQuery("select obj from UsuarioApp obj where obj.ativo = 'S' ").setFirstResult(initPosition.intValue()).setMaxResults(finalPosition.intValue()).
+					getResultList();
+			
+			return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			getEntityManager().close();
 			throw new HibernateException(e);
 		}

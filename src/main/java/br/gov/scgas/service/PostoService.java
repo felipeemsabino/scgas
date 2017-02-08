@@ -44,28 +44,28 @@ public class PostoService {
 
 	@Inject
 	private Gson gson;
-	
-	
+
+
 	@POST
 	@Path("/cadastrarPosto")
 	public Response cadastrarPosto(@Context HttpServletRequest request,String json) {
 		Posto posto = gson.fromJson(json, Posto.class);
 		posto.setDataCadastro(new Date());
-		
+
 		try {
 			if(posto.getId() == null){
 				dao.save(posto);
 			}else{
 				dao.update(posto);
 			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar Posto!")).build();
 		}
-		
+
 		return Response.status(200).entity(gson.toJson(posto)).build();
 	}
 	@POST
@@ -73,25 +73,25 @@ public class PostoService {
 	public Response cadastrarBandeiraPosto(@Context HttpServletRequest request,String json) {
 		BandeiraPosto bandeiraPosto = gson.fromJson(json, BandeiraPosto.class);
 		bandeiraPosto.setDataCadastro(new Date());
-		
+
 		try {
 			if(bandeiraPosto.getId() == null){
 				daoB.save(bandeiraPosto);
 			}else{
 				daoB.update(bandeiraPosto);
 			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar Bandeira Posto!")).build();
 		}
-		
+
 		return Response.status(200).entity(gson.toJson(bandeiraPosto)).build();
 	}
-	
-	
+
+
 	/**
 	 * @author robertosampaio
 	 * @since 05/02/2017
@@ -117,9 +117,9 @@ public class PostoService {
 	}
 
 
-	
-	
-	
+
+
+
 
 	/**
 	 * @author robertosampaio
@@ -160,11 +160,11 @@ public class PostoService {
 					prc.getUsuario().setTokenFacebook(null);
 					prc.getUsuario().setTokenGmail(null);
 					prc.getUsuario().setDataCadastro(null);
-					
+
 					posto.getListaPrecosGNV().clear();
 					posto.getListaPrecosGNV().add(prc);
 				}
-				
+
 				//Pega distancia
 				Float distancia = (float) Math.round(distFrom(new Float(x.replace(",", ".")),new Float(y.replace(",", ".")), new Float(posto.getCoordenadaX().replace(",", ".")),new Float(posto.getCoordenadaY().replace(",", "."))));
 				posto.setDistanciaParaOdernar(distancia);
@@ -243,7 +243,7 @@ public class PostoService {
 		}
 		return Response.status(200).entity(gson.toJson(price)).build();
 	}
-	
+
 	/**
 	 * @author robertosampaio
 	 * @since 11/11/2016
@@ -261,7 +261,7 @@ public class PostoService {
 		try{
 			List<BandeiraPosto> bandeiraPostos = new ArrayList<BandeiraPosto>();
 			bandeiraPostos = daoB.listAll(BandeiraPosto.class);
-			
+
 			return Response.status(200).entity(gson.toJson(bandeiraPostos)).build();			
 		}catch(HibernateException e){
 			return Response.status(404).entity("Registro não encontrado.").build();																							
@@ -269,6 +269,81 @@ public class PostoService {
 			return Response.status(500).entity(null).build();
 		}
 	}
+
+
+
+	/**
+	 * @author robertosampaio
+	 * @since 14/11/2016
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * @throws Exception 
+	 * @throws HibernateException 
+	 * 
+	 **/
+	@SuppressWarnings("unchecked")
+	@GET
+	@Path("/listaTodosPostos/{initialPosition}/{finalPosition}")
+	public Response listaTodosPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) throws HibernateException, Exception {
+		try{
+			List listaPostos= new ArrayList();
+			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
+
+			for (Posto posto : (List<Posto>)listaPostos) {
+				if(posto.getListaPrecosGNV() != null && !posto.getListaPrecosGNV().isEmpty()){
+					PrecoGNV prc = posto.getListaPrecosGNV().get(0);
+					prc.setPosto(null);
+					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
+					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
+
+					if(diferencaHoras <= 0){
+						prc.setTempoUltimaAtulizacao("Atualizado a menos de uma hora atrás");
+					}else if(diferencaHoras >= 24){
+						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dia(s) atrás");
+					}else{
+						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
+					}
+					prc.getUsuario().setSenha(null);
+					prc.getUsuario().setEmail(null);
+					prc.getUsuario().setTokenFacebook(null);
+					prc.getUsuario().setTokenGmail(null);
+					prc.getUsuario().setDataCadastro(null);
+
+					posto.getListaPrecosGNV().clear();
+					posto.getListaPrecosGNV().add(prc);
+				}
+
+			}
+			Collections.sort(listaPostos);
+			BigInteger contador = dao.contaLinhas();
+
+			if(contador.longValue() <= new Long(finalPosition) ){
+				listaPostos.add("{hasMore:"+0+"}");
+			}else{
+				listaPostos.add("{hasMore:"+1+"}");				
+			}
+
+			String json = gson.toJson(listaPostos);
+
+			dao.closeDao();
+			return Response.status(200).entity(json).build();			
+		}catch(HibernateException e){
+
+			return Response.status(404).entity("Erro ao recuperar Postos.").build();																							
+		}catch(Exception e){
+			e.printStackTrace();
+			dao.closeDao();
+			return Response.status(500).entity(null).build();
+		}
+
+
+
+
+	}
+
 
 
 	public PostoDao<Posto, Long> getDao() {

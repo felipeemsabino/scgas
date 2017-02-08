@@ -1,6 +1,8 @@
 package br.gov.scgas.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -17,6 +19,7 @@ import org.hibernate.HibernateException;
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.UsuarioDao;
+import br.gov.scgas.entidade.BandeiraPosto;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.GenerateSHA;
 import br.gov.scgas.util.SendEmail;
@@ -246,6 +249,23 @@ public class UsuarioService {
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
+	
+	
+	
+	@GET
+	@Path("/listaUsuarios/{initialPosition}/{finalPosition}")
+	public Response listaUsuarios(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) {
+		try{
+			List<UsuarioApp> listaUsr = new ArrayList<UsuarioApp>();
+			listaUsr = dao.listAllUsr(new Long(initialPosition), new Long(finalPosition));
+			return Response.status(200).entity(gson.toJson(listaUsr)).build();			
+		}catch(HibernateException e){
+			return Response.status(404).entity("Registro não encontrado.").build();																							
+		}catch(Exception e){
+			return Response.status(500).entity(null).build();
+		}
+	}
+
 	
 	
 	
