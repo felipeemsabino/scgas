@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 
 import br.gov.scgas.dao.UsuarioDao;
 import br.gov.scgas.entidade.BandeiraPosto;
+import br.gov.scgas.entidade.FiltroPosto;
+import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.GenerateSHA;
 import br.gov.scgas.util.SendEmail;
@@ -253,16 +255,28 @@ public class UsuarioService {
 	
 	
 	@GET
-	@Path("/listaUsuarios/{initialPosition}/{finalPosition}")
-	public Response listaUsuarios(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) {
+	@Path("/listaUsuarios/{json}")
+	public Response listaUsuarios(@PathParam("json") String json) {
 		try{
-			List<UsuarioApp> listaUsr = new ArrayList<UsuarioApp>();
-			listaUsr = dao.listAllUsr(new Long(initialPosition), new Long(finalPosition));
-			return Response.status(200).entity(gson.toJson(listaUsr)).build();			
+			FiltroUsuarioApp filtro = gson.fromJson(json, FiltroUsuarioApp.class);
+			List listaUsr = new ArrayList();
+			int contador = dao.countUsrFiltro(filtro);
+			listaUsr.add("{numRows:"+contador+"}");
+			listaUsr.addAll(dao.listAllUsrFiltro(filtro));
+			String jsonAux = gson.toJson(listaUsr);
+			dao.closeDao();
+			return Response.status(200).entity(jsonAux).build();			
 		}catch(HibernateException e){
 			return Response.status(404).entity("Registro não encontrado.").build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
+		}finally{
+			try {
+				dao.closeDao();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

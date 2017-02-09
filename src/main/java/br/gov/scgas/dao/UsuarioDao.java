@@ -3,8 +3,12 @@ package br.gov.scgas.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.HibernateException;
 
+import br.gov.scgas.entidade.FiltroPosto;
+import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.UsuarioApp;
 
@@ -86,14 +90,72 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 		}
 
 	}
-	
-	public List<UsuarioApp> listAllUsr(Long initPosition,Long finalPosition) throws HibernateException,Exception{
-		try{
 
-			List<UsuarioApp> t = getEntityManager().createQuery("select obj from UsuarioApp obj where obj.ativo = 'S' ").setFirstResult(initPosition.intValue()).setMaxResults(finalPosition.intValue()).
+	public List<UsuarioApp> listAllUsrFiltro(FiltroUsuarioApp filtro) throws HibernateException,Exception{
+		try{
+			StringBuilder strQuery = new StringBuilder();
+			strQuery.append("select obj from UsuarioApp obj where 1 = 1 ");
+
+			if(filtro.getNome() != null && !filtro.getNome().isEmpty()){
+				strQuery.append(" and obj.nome like :nome");
+			}
+
+			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
+				strQuery.append(" and obj.email = :emai;");
+			}
+
+			Query query = getEntityManager().createQuery(strQuery.toString());
+
+			if(filtro.getNome() != null && !filtro.getNome().isEmpty()){
+				query.setParameter("nome", filtro.getNome());
+			}
+
+			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
+				query.setParameter("email", filtro.getEmail());
+			}
+
+
+
+			List<UsuarioApp> t = query.setFirstResult(filtro.getInicio()).setMaxResults(filtro.getFim()).
 					getResultList();
-			
+
 			return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			getEntityManager().close();
+			throw new HibernateException(e);
+		}
+	}
+
+	public int countUsrFiltro(FiltroUsuarioApp filtro) throws HibernateException,Exception{
+		try{
+			StringBuilder strQuery = new StringBuilder();
+			strQuery.append("select obj from UsuarioApp obj where 1 = 1 ");
+
+			if(filtro.getNome() != null && !filtro.getNome().isEmpty()){
+				strQuery.append(" and obj.nome like :nome");
+			}
+
+			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
+				strQuery.append(" and obj.email = :emai;");
+			}
+
+			Query query = getEntityManager().createQuery(strQuery.toString());
+
+			if(filtro.getNome() != null && !filtro.getNome().isEmpty()){
+				query.setParameter("nome", filtro.getNome());
+			}
+
+			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
+				query.setParameter("email", filtro.getEmail());
+			}
+
+
+
+			List<UsuarioApp> t = query.getResultList();
+
+			return t.size();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

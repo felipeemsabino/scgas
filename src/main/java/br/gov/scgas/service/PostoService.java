@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.BandeiraPostoDao;
 import br.gov.scgas.dao.PostoDao;
 import br.gov.scgas.entidade.BandeiraPosto;
+import br.gov.scgas.entidade.FiltroPosto;
 import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
@@ -286,11 +287,12 @@ public class PostoService {
 	 **/
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/listaTodosPostos/{initialPosition}/{finalPosition}")
-	public Response listaTodosPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition) throws HibernateException, Exception {
+	@Path("/listaTodosPostos/{json}")
+	public Response listaTodosPostos(@PathParam("json") String json) throws HibernateException, Exception {
 		try{
+			FiltroPosto filtro = gson.fromJson(json, FiltroPosto.class);
 			List listaPostos= new ArrayList();
-			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
+			listaPostos = dao.listAllPostoFiltro(filtro);
 
 			for (Posto posto : (List<Posto>)listaPostos) {
 				if(posto.getListaPrecosGNV() != null && !posto.getListaPrecosGNV().isEmpty()){
@@ -318,18 +320,12 @@ public class PostoService {
 
 			}
 			Collections.sort(listaPostos);
-			BigInteger contador = dao.contaLinhas();
-
-			if(contador.longValue() <= new Long(finalPosition) ){
-				listaPostos.add("{hasMore:"+0+"}");
-			}else{
-				listaPostos.add("{hasMore:"+1+"}");				
-			}
-
-			String json = gson.toJson(listaPostos);
+			int contador = dao.countPostoFiltro(filtro);
+			listaPostos.add("{numRows:"+contador+"}");
+			String jsonRst = gson.toJson(listaPostos);
 
 			dao.closeDao();
-			return Response.status(200).entity(json).build();			
+			return Response.status(200).entity(jsonRst).build();			
 		}catch(HibernateException e){
 
 			return Response.status(404).entity("Erro ao recuperar Postos.").build();																							
@@ -337,6 +333,13 @@ public class PostoService {
 			e.printStackTrace();
 			dao.closeDao();
 			return Response.status(500).entity(null).build();
+		}finally{
+			try {
+				dao.closeDao();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 

@@ -18,6 +18,7 @@ import org.hibernate.HibernateException;
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.NoticiasDao;
+import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.UsuarioApp;
 
@@ -64,19 +65,26 @@ public class NoticiasService {
 	 * 200 (OK, registro encontrado)
 	 * 404 (Registro não encontrado)
 	 * 500 (Exception lancada por algum motivo)
+	 * @throws Exception 
+	 * @throws HibernateException 
 	 * 
 	 **/
 	@GET
-	@Path("/listaTodasNoticias")
-	public Response listaTodasNoticias() {
+	@Path("/listaTodasNoticias/{json}")
+	public Response listaTodasNoticias(@PathParam("json") String json) throws HibernateException, Exception {
 		try{
-			List<Noticias> listaNoticias = new ArrayList<Noticias>();
-			listaNoticias = dao.listAll(Noticias.class);
-			
+			FiltroUsuarioApp filtro = gson.fromJson(json, FiltroUsuarioApp.class);
+			List listaNoticias = new ArrayList();
+			int contador = dao.countNoticiasFiltro(filtro);
+			listaNoticias.add("{numRows:"+contador+"}");
+			listaNoticias.addAll(dao.listAllNoticiasFiltro(filtro));
+			dao.closeDao();
 			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
 		}catch(HibernateException e){
+			dao.closeDao();
 			return Response.status(404).entity("Registro não encontrado.").build();																							
 		}catch(Exception e){
+			dao.closeDao();
 			return Response.status(500).entity(null).build();
 		}
 	}
