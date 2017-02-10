@@ -70,10 +70,13 @@ public class NoticiasService {
 	 * 
 	 **/
 	@GET
-	@Path("/listaTodasNoticias/{json}")
-	public Response listaTodasNoticias(@PathParam("json") String json) throws HibernateException, Exception {
+	@Path("/listaTodasNoticias/{inicio}/{fim}")
+	public Response listaTodasNoticias(@PathParam("inicio") String inicio,
+			@PathParam("fim") String fim) throws HibernateException, Exception {
 		try{
-			FiltroUsuarioApp filtro = gson.fromJson(json, FiltroUsuarioApp.class);
+			FiltroUsuarioApp filtro = new FiltroUsuarioApp();
+			filtro.setInicio(new Integer(inicio));
+			filtro.setFim(new Integer(fim));
 			List listaNoticias = new ArrayList();
 			int contador = dao.countNoticiasFiltro(filtro);
 			listaNoticias.add("{numRows:"+contador+"}");

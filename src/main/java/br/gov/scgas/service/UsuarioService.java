@@ -19,8 +19,6 @@ import org.hibernate.HibernateException;
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.UsuarioDao;
-import br.gov.scgas.entidade.BandeiraPosto;
-import br.gov.scgas.entidade.FiltroPosto;
 import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.GenerateSHA;
@@ -34,7 +32,7 @@ public class UsuarioService {
 
 	@Inject
 	private UsuarioDao<UsuarioApp, Long> dao;
-	
+
 	@Inject
 	private Gson gson;
 
@@ -59,18 +57,18 @@ public class UsuarioService {
 				}else{
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
 				}
-				
+
 				dao.update(usuarioApp);
 				usuarioApp.setSenha(null);
 			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar usuario!")).build();
 		}
-		
+
 		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
 	}
 
@@ -130,11 +128,11 @@ public class UsuarioService {
 			if(idParam != null){
 				usuarioApp = dao.recuperaUsuarioPorFacebook(idParam);
 			}
-			
+
 			if(usuarioApp == null){
 				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
 			}
-			
+
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
@@ -207,7 +205,7 @@ public class UsuarioService {
 			Random gerador = new Random(new Date().getTime());
 			String numPin="0";
 			numPin+=gerador.nextInt()*-1;
-			
+
 			if(numPin.length() > 4){
 				numPin = numPin.substring(0,4);
 			}
@@ -236,7 +234,7 @@ public class UsuarioService {
 		aux.setDataCadastro(new Date());
 
 		try {
-			 aux = dao.recuperaSenhaPorPIN(aux.getEmail(),aux.getPinSenha());
+			aux = dao.recuperaSenhaPorPIN(aux.getEmail(),aux.getPinSenha());
 			if(aux != null){
 				aux.setPinSenha(null);				
 				dao.update(aux);
@@ -251,14 +249,24 @@ public class UsuarioService {
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
-	
-	
-	
+
+
+
 	@GET
-	@Path("/listaUsuarios/{json}")
-	public Response listaUsuarios(@PathParam("json") String json) {
+	@Path("/listaUsuarios/{inicio}/{fim}/{nome}/{email}")
+	public Response listaUsuarios(@PathParam("inicio") String inicio,
+			@PathParam("fim") String fim,
+			@PathParam("nome") String nome,
+			@PathParam("email") String email) {
 		try{
-			FiltroUsuarioApp filtro = gson.fromJson(json, FiltroUsuarioApp.class);
+			FiltroUsuarioApp filtro = new FiltroUsuarioApp();
+			filtro.setInicio(new Integer(inicio));
+			filtro.setFim(new Integer(fim));
+			filtro.setNome(nome);
+			filtro.setEmail(email);
+
+
+
 			List listaUsr = new ArrayList();
 			int contador = dao.countUsrFiltro(filtro);
 			listaUsr.add("{numRows:"+contador+"}");
@@ -280,11 +288,11 @@ public class UsuarioService {
 		}
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 
 
 

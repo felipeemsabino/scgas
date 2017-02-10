@@ -287,10 +287,21 @@ public class PostoService {
 	 **/
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/listaTodosPostos/{json}")
-	public Response listaTodosPostos(@PathParam("json") String json) throws HibernateException, Exception {
+	@Path("/listaTodosPostos/{inicio}/{fim}/{nomePosto}/{bandeiraPosto}/{enderecoPosto}")
+	public Response listaTodosPostos(@PathParam("inicio") String inicio,
+			@PathParam("fim") String fim,
+			@PathParam("nomePosto") String nomePosto,
+			@PathParam("bandeiraPosto") String bandeiraPosto,
+			@PathParam("enderecoPosto") String enderecoPosto) throws HibernateException, Exception {
 		try{
-			FiltroPosto filtro = gson.fromJson(json, FiltroPosto.class);
+		
+			FiltroPosto filtro = new FiltroPosto();
+			filtro.setInicio(new Integer(inicio));
+			filtro.setFim(new Integer(fim));
+			filtro.setNomePosto(nomePosto);
+			filtro.setEnderecoPosto(enderecoPosto);
+			filtro.setBandeiraPosto(bandeiraPosto);
+			
 			List listaPostos= new ArrayList();
 			listaPostos = dao.listAllPostoFiltro(filtro);
 
