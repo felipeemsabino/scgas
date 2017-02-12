@@ -287,6 +287,34 @@ public class UsuarioService {
 			}
 		}
 	}
+	
+	
+	
+	@POST
+	@Path("/atualizaTokenNotificacao")
+	public Response atualizaTokenNotificacao(@Context HttpServletRequest request,String json) {
+		UsuarioApp aux = gson.fromJson(json, UsuarioApp.class);
+		aux.setDataCadastro(new Date());
+		String tk = aux.getTokenNotificacao();
+		try {
+			aux = dao.getById(UsuarioApp.class,aux.getId());
+			if(aux != null){
+				aux.setTokenNotificacao(tk);				
+				dao.update(aux);
+				aux.setSenha(null);				
+			}else{
+				return Response.status(404).entity(gson.toJson("Usuário não encontrado!")).build();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao recuperar usuario!")).build();
+		}
+		return Response.status(200).entity(gson.toJson(aux)).build();
+	}
+
+
+
 
 
 

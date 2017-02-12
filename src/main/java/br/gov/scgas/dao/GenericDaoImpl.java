@@ -122,7 +122,7 @@ public class GenericDaoImpl<T, ID extends Serializable>  implements GenericDao<T
 	}
 
 	protected void closeConnection() throws HibernateException, Exception {
-		entityManager.flush();
+		//entityManager.flush();
 		entityManager.getTransaction().rollback();			
 		entityManager.close();
 
