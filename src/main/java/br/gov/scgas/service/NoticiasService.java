@@ -99,6 +99,40 @@ public class NoticiasService {
 	 * 200 (OK, registro encontrado)
 	 * 404 (Registro não encontrado)
 	 * 500 (Exception lancada por algum motivo)
+	 * @throws Exception 
+	 * @throws HibernateException 
+	 * 
+	 **/
+	@GET
+	@Path("/listaTodasNoticiasApp/{inicio}/{fim}")
+	public Response listaTodasNoticiasApp(@PathParam("inicio") String inicio,
+			@PathParam("fim") String fim) throws HibernateException, Exception {
+		try{
+			FiltroUsuarioApp filtro = new FiltroUsuarioApp();
+			filtro.setInicio(new Integer(inicio));
+			filtro.setFim(new Integer(fim));
+			List listaNoticias = new ArrayList();
+			//int contador = dao.countNoticiasFiltro(filtro);
+			//listaNoticias.add("{numRows:"+contador+"}");
+			listaNoticias.addAll(dao.listAllNoticiasFiltro(filtro));
+			dao.closeDao();
+			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
+		}catch(HibernateException e){
+			dao.closeDao();
+			return Response.status(404).entity("Registro não encontrado.").build();																							
+		}catch(Exception e){
+			dao.closeDao();
+			return Response.status(500).entity(null).build();
+		}
+	}
+	/**
+	 * @author robertosampaio
+	 * @since 05/02/2017
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
 	 * 
 	 **/
 	@GET
