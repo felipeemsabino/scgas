@@ -67,7 +67,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 			}
 
 			if(filtro.getBandeiraPosto() != null && !filtro.getBandeiraPosto().isEmpty()){
-				query.setParameter("idBandeira", filtro.getBandeiraPosto());
+				query.setParameter("idBandeira", new Long(filtro.getBandeiraPosto()));
 			}
 
 			if(filtro.getEnderecoPosto() != null && !filtro.getEnderecoPosto().isEmpty()){
@@ -110,7 +110,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 			}
 
 			if(filtro.getBandeiraPosto() != null && !filtro.getBandeiraPosto().isEmpty()){
-				query.setParameter("idBandeira", filtro.getBandeiraPosto());
+				query.setParameter("idBandeira", new Long(filtro.getBandeiraPosto()));
 			}
 
 			if(filtro.getEnderecoPosto() != null && !filtro.getEnderecoPosto().isEmpty()){

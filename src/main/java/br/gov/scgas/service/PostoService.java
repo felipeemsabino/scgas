@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -287,12 +288,12 @@ public class PostoService {
 	 **/
 	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/listaTodosPostos/{inicio}/{fim}/{nomePosto}/{bandeiraPosto}/{enderecoPosto}")
-	public Response listaTodosPostos(@PathParam("inicio") String inicio,
-			@PathParam("fim") String fim,
-			@PathParam("nomePosto") String nomePosto,
-			@PathParam("bandeiraPosto") String bandeiraPosto,
-			@PathParam("enderecoPosto") String enderecoPosto) throws HibernateException, Exception {
+	@Path("/listaTodosPostos")
+	public Response listaTodosPostos(@QueryParam("inicio") String inicio,
+			@QueryParam("fim") String fim,
+			@QueryParam("nomePosto") String nomePosto,
+			@QueryParam("bandeiraPosto") String bandeiraPosto,
+			@QueryParam("enderecoPosto") String enderecoPosto) throws HibernateException, Exception {
 		try{
 		
 			FiltroPosto filtro = new FiltroPosto();

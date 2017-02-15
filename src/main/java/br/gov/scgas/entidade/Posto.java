@@ -156,6 +156,9 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Override
 	public int compareTo(Posto o) {
 		// TODO Auto-generated method stub
+		if(o.getDistanciaParaOdernar() == null){
+			return 0;
+		}
 		
 		return distanciaParaOdernar.compareTo(o.getDistanciaParaOdernar());
 	}

@@ -11,6 +11,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -254,10 +255,10 @@ public class UsuarioService {
 
 	@GET
 	@Path("/listaUsuarios/{inicio}/{fim}/{nome}/{email}")
-	public Response listaUsuarios(@PathParam("inicio") String inicio,
-			@PathParam("fim") String fim,
-			@PathParam("nome") String nome,
-			@PathParam("email") String email) {
+	public Response listaUsuarios(@QueryParam("inicio") String inicio,
+			@QueryParam("fim") String fim,
+			@QueryParam("nome") String nome,
+			@QueryParam("email") String email) {
 		try{
 			FiltroUsuarioApp filtro = new FiltroUsuarioApp();
 			filtro.setInicio(new Integer(inicio));
