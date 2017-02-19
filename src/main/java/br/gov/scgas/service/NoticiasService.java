@@ -19,8 +19,11 @@ import com.google.gson.Gson;
 
 import br.gov.scgas.dao.NoticiasDao;
 import br.gov.scgas.entidade.FiltroUsuarioApp;
+import br.gov.scgas.entidade.FirebaseData;
+import br.gov.scgas.entidade.FirebaseMensagem;
+import br.gov.scgas.entidade.FirebaseNotification;
 import br.gov.scgas.entidade.Noticias;
-import br.gov.scgas.entidade.UsuarioApp;
+import br.gov.scgas.util.SendNotificationFirebase;
 
 
 
@@ -155,6 +158,41 @@ public class NoticiasService {
 			return Response.status(500).entity(null).build();
 		}
 	}
+	
+	public String sendNotification(Noticias noticia) {
+		Gson gson = new Gson();
+		FirebaseMensagem fbmensagem = new FirebaseMensagem();
+		FirebaseData data = new FirebaseData();
+		data.setDescripcion("Dicas e Noticias");
+		data.setTitulo("SCGAS APP");
+		
+		
+		FirebaseNotification notification = new FirebaseNotification();
+		notification.setTitle("SCGAS APP");
+		//notification.setIcon("logo_home");
+		//fbmensagem.setTo(chat.getUsuarioApp().getTokenNotificacao());	
+		//notification.setBody(chat.getUsuarioChat().getNome()+": "+ msg.getTextoMensagem());
+		//data.setIdUsuarioDestinatario(chat.getUsuarioApp().getId().toString());
+	
+		
+		
+		
+		
+
+		fbmensagem.setData(data);
+		fbmensagem.setNotification(notification);
+
+		String conteudo = gson.toJson(fbmensagem);
+		// envia push
+		try {
+			SendNotificationFirebase.enviaFirebase(conteudo);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return conteudo;
+	}
+
 
 	
 	

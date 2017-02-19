@@ -23,7 +23,7 @@ public class SendNotificationFirebase {
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setRequestProperty("Authorization", "key=" +  "AIzaSyBCfsZeF3nTeQ4K0ytY-v8nieQ0RRn3VfU");//chave publica do firebase
+		conn.setRequestProperty("Authorization", "key=" +  "AAAAp0XpKJA:APA91bEIel2OdN8sJceotBUmvcOauMxdIwcmeKuRG16SiM3f0QviXwJN4oAP6ZzUqnCLcCvVSzp6cS_o65czb-oI1x_y0WFcOo_BpaLDB1SXDYbKKQqN757qmp176qw7wemmp_LZgKneK1vT-6cD2ky1YcyDKTBnNQ");//chave publica do firebase
 		OutputStream os = null;
 		BufferedReader br  = null;
 		try {
