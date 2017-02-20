@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -73,17 +74,17 @@ public class NoticiasService {
 	 * 
 	 **/
 	@GET
-	@Path("/listaTodasNoticias/{inicio}/{fim}")
-	public Response listaTodasNoticias(@PathParam("inicio") String inicio,
-			@PathParam("fim") String fim) throws HibernateException, Exception {
+	@Path("/listaTodasNoticias")
+	public Response listaTodasNoticias(@QueryParam("inicio") String inicio,
+			@QueryParam("fim") String fim) throws HibernateException, Exception {
 		try{
 			FiltroUsuarioApp filtro = new FiltroUsuarioApp();
 			filtro.setInicio(new Integer(inicio));
 			filtro.setFim(new Integer(fim));
 			List listaNoticias = new ArrayList();
 			int contador = dao.countNoticiasFiltro(filtro);
-			listaNoticias.add("{numRows:"+contador+"}");
 			listaNoticias.addAll(dao.listAllNoticiasFiltro(filtro));
+			listaNoticias.add("{numRows:"+contador+"}");
 			dao.closeDao();
 			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
 		}catch(HibernateException e){
@@ -170,15 +171,9 @@ public class NoticiasService {
 		FirebaseNotification notification = new FirebaseNotification();
 		notification.setTitle("SCGAS APP");
 		//notification.setIcon("logo_home");
-		//fbmensagem.setTo(chat.getUsuarioApp().getTokenNotificacao());	
-		//notification.setBody(chat.getUsuarioChat().getNome()+": "+ msg.getTextoMensagem());
+		fbmensagem.setTo("all");	
+		notification.setBody("teste");//noticia.getTextoNoticia());
 		//data.setIdUsuarioDestinatario(chat.getUsuarioApp().getId().toString());
-	
-		
-		
-		
-		
-
 		fbmensagem.setData(data);
 		fbmensagem.setNotification(notification);
 
@@ -191,6 +186,11 @@ public class NoticiasService {
 			e.printStackTrace();
 		}
 		return conteudo;
+	}
+	
+	public static void main(String [] args){
+		NoticiasService noti=new NoticiasService();
+		noti.sendNotification(new Noticias());
 	}
 
 

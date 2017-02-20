@@ -19,7 +19,7 @@ public class NoticiasDao<T, ID extends Serializable>  extends GenericDaoImpl<T, 
 	public List<Noticias> listAllNoticiasFiltro(FiltroUsuarioApp filtro) throws HibernateException,Exception{
 		try{
 			StringBuilder strQuery = new StringBuilder();
-			strQuery.append("select obj from Noticias obj ");
+			strQuery.append("select obj from Noticias obj order by dataCadastro desc");
 
 
 			Query query = getEntityManager().createQuery(strQuery.toString());

@@ -254,7 +254,7 @@ public class UsuarioService {
 
 
 	@GET
-	@Path("/listaUsuarios/{inicio}/{fim}/{nome}/{email}")
+	@Path("/listaUsuarios")
 	public Response listaUsuarios(@QueryParam("inicio") String inicio,
 			@QueryParam("fim") String fim,
 			@QueryParam("nome") String nome,
@@ -270,8 +270,8 @@ public class UsuarioService {
 
 			List listaUsr = new ArrayList();
 			int contador = dao.countUsrFiltro(filtro);
-			listaUsr.add("{numRows:"+contador+"}");
 			listaUsr.addAll(dao.listAllUsrFiltro(filtro));
+			listaUsr.add("{numRows:"+contador+"}");
 			String jsonAux = gson.toJson(listaUsr);
 			dao.closeDao();
 			return Response.status(200).entity(jsonAux).build();			
