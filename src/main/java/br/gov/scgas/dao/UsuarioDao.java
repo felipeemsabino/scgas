@@ -101,17 +101,17 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 			}
 
 			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
-				strQuery.append(" and obj.email = :emai;");
+				strQuery.append(" and obj.email like :emai;");
 			}
 
 			Query query = getEntityManager().createQuery(strQuery.toString());
 
 			if(filtro.getNome() != null && !filtro.getNome().isEmpty()){
-				query.setParameter("nome", filtro.getNome());
+				query.setParameter("nome", "%"+filtro.getNome()+"%");
 			}
 
 			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
-				query.setParameter("email", filtro.getEmail());
+				query.setParameter("email", "%"+filtro.getEmail()+"%");
 			}
 
 

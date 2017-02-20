@@ -49,7 +49,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 			strQuery.append("select distinct obj from Posto obj where 1 = 1 ");
 
 			if(filtro.getNomePosto() != null && !filtro.getNomePosto().isEmpty()){
-				strQuery.append(" and obj.nome like '%:nome%'");
+				strQuery.append(" and obj.nome like :nome");
 			}
 
 			if(filtro.getBandeiraPosto() != null && !filtro.getBandeiraPosto().isEmpty()){
@@ -57,13 +57,13 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 			}
 
 			if(filtro.getEnderecoPosto() != null && !filtro.getEnderecoPosto().isEmpty()){
-				strQuery.append(" and obj.endereco like '%:endereco%'");
+				strQuery.append(" and obj.endereco like :endereco");
 			}
 
 			Query query = getEntityManager().createQuery(strQuery.toString());
 
 			if(filtro.getNomePosto() != null && !filtro.getNomePosto().isEmpty()){
-				query.setParameter("nome", filtro.getNomePosto());
+				query.setParameter("nome","%"+ filtro.getNomePosto()+"%");
 			}
 
 			if(filtro.getBandeiraPosto() != null && !filtro.getBandeiraPosto().isEmpty()){
@@ -71,7 +71,7 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 			}
 
 			if(filtro.getEnderecoPosto() != null && !filtro.getEnderecoPosto().isEmpty()){
-				query.setParameter("endereco", filtro.getEnderecoPosto());
+				query.setParameter("endereco", "%"+filtro.getEnderecoPosto()+"%");
 			}
 
 			

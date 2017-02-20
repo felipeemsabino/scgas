@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,9 +30,19 @@ public class Noticias implements Serializable {
 	private String textoNoticia;
 	
 	@Temporal(TemporalType.DATE)
-	@Column(name="DATA_CAD",nullable = false, length = 11) 
+	@Column(name="DATA_CAD",nullable = false, length = 11)  
 	private Date dataCadastro;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name="NOTIFICA", nullable = true)
+	private SimNao notifica;
+	
+	public SimNao getNotifica() {
+		return notifica;
+	}
+	public void setNotifica(SimNao notifica) {
+		this.notifica = notifica;
+	}
 	public Long getId() {
 		return id;
 	}
