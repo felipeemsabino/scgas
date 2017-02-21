@@ -25,6 +25,7 @@ import br.gov.scgas.entidade.FirebaseData;
 import br.gov.scgas.entidade.FirebaseMensagem;
 import br.gov.scgas.entidade.FirebaseNotification;
 import br.gov.scgas.entidade.Noticias;
+import br.gov.scgas.entidade.SimNao;
 import br.gov.scgas.util.SendNotificationFirebase;
 
 
@@ -51,14 +52,17 @@ public class NoticiasService {
 			}else{
 				dao.update(noticias);
 			}
-			Runnable runnable = new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					sendNotification(noticias);
-				}
-			};
-			new java.lang.Thread(runnable).start();
+			if(noticias.getNotifica().equals(SimNao.S)){
+				Runnable runnable = new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						sendNotification(noticias);
+					}
+				};
+				new java.lang.Thread(runnable).start();
+				
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
