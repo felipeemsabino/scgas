@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.apache.tomcat.jni.Thread;
 import org.hibernate.HibernateException;
 
 import com.google.gson.Gson;
@@ -50,6 +51,14 @@ public class NoticiasService {
 			}else{
 				dao.update(noticias);
 			}
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					sendNotification(noticias);
+				}
+			};
+			new java.lang.Thread(runnable).start();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -171,8 +180,8 @@ public class NoticiasService {
 		FirebaseNotification notification = new FirebaseNotification();
 		notification.setTitle("SCGAS APP");
 		//notification.setIcon("logo_home");
-		fbmensagem.setTo("all");	
-		notification.setBody("teste");//noticia.getTextoNoticia());
+		fbmensagem.setTo("/topics/all");	
+		notification.setBody(noticia.getTitulo());
 		//data.setIdUsuarioDestinatario(chat.getUsuarioApp().getId().toString());
 		fbmensagem.setData(data);
 		fbmensagem.setNotification(notification);
