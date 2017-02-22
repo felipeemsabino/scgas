@@ -28,6 +28,7 @@ import br.gov.scgas.entidade.FiltroPosto;
 import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
+import br.gov.scgas.entidade.UsuarioApp;
 
 
 
@@ -53,6 +54,9 @@ public class PostoService {
 	public Response cadastrarPosto(@Context HttpServletRequest request,String json) {
 		Posto posto = gson.fromJson(json, Posto.class);
 		posto.setDataCadastro(new Date());
+		PrecoGNV price = new PrecoGNV();
+		price.setValorGNV(posto.getPrecoGNV());
+		
 
 		try {
 			if(posto.getId() == null){
@@ -60,14 +64,21 @@ public class PostoService {
 			}else{
 				dao.update(posto);
 			}
-
+			UsuarioApp usr= new UsuarioApp();
+			usr.setId(1l);
+			price.setUsuario(usr);
+			Posto postoAux = new Posto();
+			postoAux.setId(posto.getId());
+			price.setPosto(postoAux);
+			price.setDataHoraCadastro(new Date());
+			daoPrecoPosto.save(price);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson("Erro ao criar Posto!")).build();
 		}
 
+		posto.setListaPrecosGNV(null);
 		return Response.status(200).entity(gson.toJson(posto)).build();
 	}
 	@POST
@@ -221,7 +232,7 @@ public class PostoService {
 
 	@POST
 	@Path("/atualizaPrecoCombustivel")
-	public Response recuperaSenhaPorPIN(@Context HttpServletRequest request,String json) {
+	public Response atualizaPrecoCombustivel(@Context HttpServletRequest request,String json) {
 		PrecoGNV price = gson.fromJson(json, PrecoGNV.class);
 		price.setDataHoraCadastro(new Date());
 		/**UsuarioApp usr = new UsuarioApp();
@@ -309,6 +320,7 @@ public class PostoService {
 			for (Posto posto : (List<Posto>)listaPostos) {
 				if(posto.getListaPrecosGNV() != null && !posto.getListaPrecosGNV().isEmpty()){
 					PrecoGNV prc = posto.getListaPrecosGNV().get(0);
+					posto.setPrecoGNV(prc.getValorGNV());
 					prc.setPosto(null);
 					long diferencaHoras = ( new Date().getTime() - prc.getDataHoraCadastro().getTime() ) / (1000*60*60);
 					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);

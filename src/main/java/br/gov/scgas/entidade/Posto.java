@@ -1,6 +1,7 @@
 package br.gov.scgas.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -70,6 +71,15 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Transient
 	private Float distanciaParaOdernar;
 	
+	@Transient
+	private BigDecimal precoGNV;
+	
+	public BigDecimal getPrecoGNV() {
+		return precoGNV;
+	}
+	public void setPrecoGNV(BigDecimal precoGNV) {
+		this.precoGNV = precoGNV;
+	}
 	public String getEndereco() {
 		return endereco;
 	}
