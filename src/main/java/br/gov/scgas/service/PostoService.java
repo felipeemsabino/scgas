@@ -56,7 +56,7 @@ public class PostoService {
 		posto.setDataCadastro(new Date());
 		PrecoGNV price = new PrecoGNV();
 		price.setValorGNV(posto.getPrecoGNV());
-		
+
 
 		try {
 			if(posto.getId() == null){
@@ -306,14 +306,14 @@ public class PostoService {
 			@QueryParam("bandeiraPosto") String bandeiraPosto,
 			@QueryParam("enderecoPosto") String enderecoPosto) throws HibernateException, Exception {
 		try{
-		
+
 			FiltroPosto filtro = new FiltroPosto();
 			filtro.setInicio(new Integer(inicio));
 			filtro.setFim(new Integer(fim));
 			filtro.setNomePosto(nomePosto);
 			filtro.setEnderecoPosto(enderecoPosto);
 			filtro.setBandeiraPosto(bandeiraPosto);
-			
+
 			List listaPostos= new ArrayList();
 			listaPostos = dao.listAllPostoFiltro(filtro);
 
@@ -366,12 +366,26 @@ public class PostoService {
 			}
 		}
 
+	}
 
+	@POST
+	@Path("/deletaPosto")
+	public Response deletaPosto(@Context HttpServletRequest request,String json) {
+		Posto posto = gson.fromJson(json, Posto.class);
+		
+
+		try {
+			dao.delete(posto);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response.status(500).entity(gson.toJson("Erro ao excluir Posto!")).build();
+		}
+
+		return Response.status(200).entity(gson.toJson("Posto excluido com sucesso!")).build();
 
 
 	}
-
-
 
 	public PostoDao<Posto, Long> getDao() {
 		return dao;
