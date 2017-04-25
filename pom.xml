@@ -208,7 +208,7 @@
 						<configuration>
 							<tasks>
 								<copy file="target/scgas.war"
-									tofile="/Users/nadal/Documents/Estrategos/apache-tomcat-8.0.38/webapps/scgas.war" />
+									tofile="/Users/robertosampaio/Documents/Estrategos/apache-tomcat-8.0.38/webapps/scgas.war" />
 							</tasks>
 						</configuration>
 						<goals>

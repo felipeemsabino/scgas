@@ -3,6 +3,7 @@ package br.gov.scgas.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,16 @@ import org.hibernate.HibernateException;
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.NoticiasDao;
+import br.gov.scgas.entidade.Contato;
 import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.FirebaseData;
 import br.gov.scgas.entidade.FirebaseMensagem;
 import br.gov.scgas.entidade.FirebaseNotification;
 import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.SimNao;
+import br.gov.scgas.entidade.UsuarioApp;
+import br.gov.scgas.util.BaseContantes;
+import br.gov.scgas.util.SendEmail;
 import br.gov.scgas.util.SendNotificationFirebase;
 
 
@@ -205,6 +210,35 @@ public class NoticiasService {
 		NoticiasService noti=new NoticiasService();
 		noti.sendNotification(new Noticias());
 	}*/
+	
+	
+	
+	/**
+	 * @author robertosampaio
+	 * @since 11/11/2016
+	 * @param ID do  Facebook
+	 * @return Response com json completo do objeto  e codigo do resultado da operacao
+	 * Códigos possiveis
+	 * 200 (OK, registro encontrado)
+	 * 404 (Registro não encontrado)
+	 * 500 (Exception lancada por algum motivo)
+	 * 
+	 **/
+	@POST
+	@Path("/contato")
+	public Response geraPinSenha(@Context HttpServletRequest request,String json) {
+		try{
+			Contato contato = gson.fromJson(json, Contato.class);
+			SendEmail sendEmail=new SendEmail();
+			sendEmail.sendContact(contato);
+			return Response.status(200).entity("email enviado com sucesso.").build();			
+																								
+		}catch(Exception e){
+			e.printStackTrace();
+			return Response.status(500).entity(null).build();
+		}
+	}
+
 
 
 	
