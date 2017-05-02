@@ -29,6 +29,7 @@ import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
 import br.gov.scgas.entidade.UsuarioApp;
+import br.gov.scgas.util.BaseContantes;
 
 
 
@@ -75,7 +76,7 @@ public class PostoService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao criar Posto!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgAddPosto)).build();
 		}
 
 		posto.setListaPrecosGNV(null);
@@ -98,7 +99,7 @@ public class PostoService {
 			// TODO Auto-generated catch block
 
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao criar Bandeira Posto!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErroCriarBandeira)).build();
 		}
 
 		return Response.status(200).entity(gson.toJson(bandeiraPosto)).build();
@@ -123,9 +124,9 @@ public class PostoService {
 			listaBandeiras = daoB.listAll(BandeiraPosto.class);
 			return Response.status(200).entity(gson.toJson(listaBandeiras)).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Registro não encontrado.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 
@@ -162,11 +163,11 @@ public class PostoService {
 					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
 
 					if(diferencaHoras <= 0){
-						prc.setTempoUltimaAtulizacao("Atualizado a menos de uma hora atrás");
+						prc.setTempoUltimaAtulizacao(BaseContantes.msgTempoAtualizacaoPreco);
 					}else if(diferencaHoras >= 24){
-						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dia(s) atrás");
+						prc.setTempoUltimaAtulizacao(BaseContantes.txtAtualizada+ diferencaDias + BaseContantes.txtDiasAtras);
 					}else{
-						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
+						prc.setTempoUltimaAtulizacao(BaseContantes.txtAtualizada+ diferencaDias + BaseContantes.txtHorasAtras);			    	
 					}
 					prc.getUsuario().setSenha(null);
 					prc.getUsuario().setEmail(null);
@@ -204,7 +205,7 @@ public class PostoService {
 			return Response.status(200).entity(json).build();			
 		}catch(HibernateException e){
 
-			return Response.status(404).entity("Erro ao recuperar Postos.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErroRecPosto).build();																							
 		}catch(Exception e){
 			e.printStackTrace();
 			dao.closeDao();
@@ -252,7 +253,7 @@ public class PostoService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao atualizar preço.")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErroUpdatePrice)).build();
 		}
 		return Response.status(200).entity(gson.toJson(price)).build();
 	}
@@ -277,7 +278,7 @@ public class PostoService {
 
 			return Response.status(200).entity(gson.toJson(bandeiraPostos)).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Registro não encontrado.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
 		}
@@ -326,11 +327,11 @@ public class PostoService {
 					long diferencaDias = (  new Date().getTime() - prc.getDataHoraCadastro().getTime()) / (1000*60*60*24);
 
 					if(diferencaHoras <= 0){
-						prc.setTempoUltimaAtulizacao("Atualizado a menos de uma hora atrás");
+						prc.setTempoUltimaAtulizacao(BaseContantes.msgTempoAtualizacaoPreco);
 					}else if(diferencaHoras >= 24){
-						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaDias + " dia(s) atrás");
+						prc.setTempoUltimaAtulizacao(BaseContantes.txtAtualizada+ diferencaDias + BaseContantes.txtDiasAtras);
 					}else{
-						prc.setTempoUltimaAtulizacao("Atualizado a "+ diferencaHoras + " hora(s) atrás");			    	
+						prc.setTempoUltimaAtulizacao(BaseContantes.txtAtualizada+ diferencaDias + BaseContantes.txtHorasAtras);			    	
 					}
 					prc.getUsuario().setSenha(null);
 					prc.getUsuario().setEmail(null);
@@ -352,7 +353,7 @@ public class PostoService {
 			return Response.status(200).entity(jsonRst).build();			
 		}catch(HibernateException e){
 
-			return Response.status(404).entity("Erro ao recuperar Postos.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErroRecPosto).build();																							
 		}catch(Exception e){
 			e.printStackTrace();
 			dao.closeDao();
@@ -372,17 +373,15 @@ public class PostoService {
 	@Path("/deletaPosto")
 	public Response deletaPosto(@Context HttpServletRequest request,String json) {
 		Posto posto = gson.fromJson(json, Posto.class);
-		
-
 		try {
 			dao.delete(posto);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao excluir Posto!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErroDelPosto)).build();
 		}
 
-		return Response.status(200).entity(gson.toJson("Posto excluido com sucesso!")).build();
+		return Response.status(200).entity(gson.toJson(BaseContantes.msgDelPosto)).build();
 
 
 	}

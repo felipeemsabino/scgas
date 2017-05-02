@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import br.gov.scgas.dao.UsuarioDao;
 import br.gov.scgas.entidade.FiltroUsuarioApp;
 import br.gov.scgas.entidade.UsuarioApp;
+import br.gov.scgas.util.BaseContantes;
 import br.gov.scgas.util.GenerateSHA;
 import br.gov.scgas.util.SendEmail;
 
@@ -67,7 +68,7 @@ public class UsuarioService {
 			// TODO Auto-generated catch block
 
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao criar usuario!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErroCriarUsuario)).build();
 		}
 
 		return Response.status(200).entity(gson.toJson(usuarioApp)).build();
@@ -93,7 +94,7 @@ public class UsuarioService {
 			usr = dao.autenticaUsuario(usr.getEmail(), pass);
 
 			if(usr == null){
-				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+				return Response.status(404).entity(gson.toJson(BaseContantes.msg404Usuario)).build();							
 			}
 
 			usr.setSenha(null);
@@ -101,7 +102,7 @@ public class UsuarioService {
 		}catch (HibernateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(404).entity("Usuario não cadastrado").build();
+			return Response.status(404).entity(BaseContantes.msg404Usuario).build();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,16 +132,16 @@ public class UsuarioService {
 			}
 
 			if(usuarioApp == null){
-				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+				return Response.status(404).entity(gson.toJson(BaseContantes.msg404Usuario)).build();							
 			}
 
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Usuario não cadastrado").build();																							
+			return Response.status(404).entity(BaseContantes.msg404Usuario).build();																							
 		}catch(Exception e){
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 
@@ -164,16 +165,16 @@ public class UsuarioService {
 				usuarioApp = dao.recuperaUsuarioPorGmail(idParam);
 			}
 			if(usuarioApp == null){
-				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+				return Response.status(404).entity(gson.toJson(BaseContantes.msg404Usuario)).build();							
 			}
 
 			usuarioApp.setSenha(null);
 
 			return Response.status(200).entity(gson.toJson(usuarioApp)).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Usuario não cadastrado").build();																							
+			return Response.status(404).entity(BaseContantes.msg404Usuario).build();																							
 		}catch(Exception e){
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 
@@ -201,7 +202,7 @@ public class UsuarioService {
 				usuarioApp = dao.recuperaUsuarioEmail(email);
 			}
 			if(usuarioApp == null){
-				return Response.status(404).entity(gson.toJson("Usuario não cadastrado")).build();							
+				return Response.status(404).entity(gson.toJson(BaseContantes.msg404Usuario)).build();							
 			}
 			Random gerador = new Random(new Date().getTime());
 			String numPin="0";
@@ -216,13 +217,13 @@ public class UsuarioService {
 			usuarioApp.setSenha(null);
 			SendEmail sendEmail=new SendEmail();
 			sendEmail.generateAndSendEmail(usuarioApp.getEmail(),numPin);
-			return Response.status(200).entity("Foi enviado ao seu email o PIN, digite para recuperar sua senha.").build();			
+			return Response.status(200).entity(BaseContantes.msgPin).build();			
 		}catch(HibernateException e){
 			e.printStackTrace();
-			return Response.status(404).entity("Usuario não cadastrado").build();																							
+			return Response.status(404).entity(BaseContantes.msg404Usuario).build();																							
 		}catch(Exception e){
 			e.printStackTrace();
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 
@@ -241,12 +242,12 @@ public class UsuarioService {
 				dao.update(aux);
 				aux.setSenha(null);				
 			}else{
-				return Response.status(404).entity(gson.toJson("PIN de recuperação de senha não encontrado!")).build();
+				return Response.status(404).entity(gson.toJson(BaseContantes.msgPin404)).build();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao recuperar senha do usuario!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErroPin)).build();
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}
@@ -276,7 +277,7 @@ public class UsuarioService {
 			dao.closeDao();
 			return Response.status(200).entity(jsonAux).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Registro não encontrado.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
 			return Response.status(500).entity(null).build();
 		}finally{
@@ -304,12 +305,12 @@ public class UsuarioService {
 				dao.update(aux);
 				aux.setSenha(null);				
 			}else{
-				return Response.status(404).entity(gson.toJson("Usuário não encontrado!")).build();
+				return Response.status(404).entity(gson.toJson(BaseContantes.msg404Usuario)).build();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao recuperar usuario!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErro500)).build();
 		}
 		return Response.status(200).entity(gson.toJson(aux)).build();
 	}

@@ -73,7 +73,7 @@ public class NoticiasService {
 			// TODO Auto-generated catch block
 			
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson("Erro ao criar notícia!")).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msg500Noticia)).build();
 		}
 		
 		return Response.status(200).entity(gson.toJson(noticias)).build();
@@ -107,7 +107,7 @@ public class NoticiasService {
 			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
 		}catch(HibernateException e){
 			dao.closeDao();
-			return Response.status(404).entity("Registro não encontrado.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
 			dao.closeDao();
 			return Response.status(500).entity(null).build();
@@ -141,10 +141,10 @@ public class NoticiasService {
 			return Response.status(200).entity(gson.toJson(listaNoticias)).build();			
 		}catch(HibernateException e){
 			dao.closeDao();
-			return Response.status(404).entity("Registro não encontrado.").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
 			dao.closeDao();
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 	/**
@@ -172,9 +172,9 @@ public class NoticiasService {
 			
 			return Response.status(200).entity(gson.toJson(noticia)).build();			
 		}catch(HibernateException e){
-			return Response.status(404).entity("Notícia não cadastrado").build();																							
+			return Response.status(404).entity(BaseContantes.msgErro404).build();																							
 		}catch(Exception e){
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(BaseContantes.msgErro500).build();
 		}
 	}
 	
@@ -182,14 +182,14 @@ public class NoticiasService {
 		Gson gson = new Gson();
 		FirebaseMensagem fbmensagem = new FirebaseMensagem();
 		FirebaseData data = new FirebaseData();
-		data.setDescripcion("Dicas e Noticias");
-		data.setTitulo("SCGAS APP");
+		data.setDescripcion(BaseContantes.lblDica);
+		data.setTitulo(BaseContantes.appName);
 		
 		
 		FirebaseNotification notification = new FirebaseNotification();
-		notification.setTitle("SCGAS APP");
+		notification.setTitle(BaseContantes.appName);
 		//notification.setIcon("logo_home");
-		fbmensagem.setTo("/topics/all");	
+		fbmensagem.setTo(BaseContantes.topicNotification);	
 		notification.setBody(noticia.getTitulo());
 		//data.setIdUsuarioDestinatario(chat.getUsuarioApp().getId().toString());
 		fbmensagem.setData(data);
@@ -226,12 +226,12 @@ public class NoticiasService {
 	 **/
 	@POST
 	@Path("/contato")
-	public Response geraPinSenha(@Context HttpServletRequest request,String json) {
+	public Response sendContact(@Context HttpServletRequest request,String json) {
 		try{
 			Contato contato = gson.fromJson(json, Contato.class);
 			SendEmail sendEmail=new SendEmail();
 			sendEmail.sendContact(contato);
-			return Response.status(200).entity("email enviado com sucesso.").build();			
+			return Response.status(200).entity(BaseContantes.msgEmailEnviado).build();			
 																								
 		}catch(Exception e){
 			e.printStackTrace();
