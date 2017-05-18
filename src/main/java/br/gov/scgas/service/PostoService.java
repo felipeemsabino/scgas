@@ -22,10 +22,13 @@ import org.hibernate.HibernateException;
 import com.google.gson.Gson;
 
 import br.gov.scgas.dao.BandeiraPostoDao;
+import br.gov.scgas.dao.GenericDaoImpl;
+import br.gov.scgas.dao.ParametrosGeraisDao;
 import br.gov.scgas.dao.PostoDao;
 import br.gov.scgas.entidade.BandeiraPosto;
 import br.gov.scgas.entidade.FiltroPosto;
 import br.gov.scgas.entidade.Noticias;
+import br.gov.scgas.entidade.ParametrosGerais;
 import br.gov.scgas.entidade.Posto;
 import br.gov.scgas.entidade.PrecoGNV;
 import br.gov.scgas.entidade.UsuarioApp;
@@ -45,6 +48,11 @@ public class PostoService {
 
 	@Inject
 	private BandeiraPostoDao<BandeiraPosto, Long> daoB;
+	
+	@Inject
+	private ParametrosGeraisDao<ParametrosGerais, Long> daoParam;
+
+	
 
 	@Inject
 	private Gson gson;
@@ -153,6 +161,8 @@ public class PostoService {
 	public Response listaPostos(@PathParam("initialPosition") String initialPosition,@PathParam("finalPosition") String finalPosition,@PathParam("x") String x,@PathParam("y") String y) throws HibernateException, Exception {
 		try{
 			List listaPostos= new ArrayList();
+			ParametrosGerais param = daoParam.getById(ParametrosGerais.class,1l);
+			
 			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
 
 			for (Posto posto : (List<Posto>)listaPostos) {
@@ -178,6 +188,7 @@ public class PostoService {
 					posto.getListaPrecosGNV().clear();
 					posto.getListaPrecosGNV().add(prc);
 				}
+				posto.setParametrosGerais(param);
 
 				//Pega distancia
 				Float distancia = (float) Math.round(distFrom(new Float(x.replace(",", ".")),new Float(y.replace(",", ".")), new Float(posto.getCoordenadaX().replace(",", ".")),new Float(posto.getCoordenadaY().replace(",", "."))));
@@ -414,6 +425,20 @@ public class PostoService {
 	public void setGson(Gson gson) {
 		this.gson = gson;
 	}
+	
+	public BandeiraPostoDao<BandeiraPosto, Long> getDaoB() {
+		return daoB;
+	}
+	public void setDaoB(BandeiraPostoDao<BandeiraPosto, Long> daoB) {
+		this.daoB = daoB;
+	}
+	public ParametrosGeraisDao<ParametrosGerais, Long> getDaoParam() {
+		return daoParam;
+	}
+	public void setDaoParam(ParametrosGeraisDao<ParametrosGerais, Long> daoParam) {
+		this.daoParam = daoParam;
+	}
+	
 
 
 

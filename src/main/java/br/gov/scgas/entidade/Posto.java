@@ -74,6 +74,15 @@ public class Posto implements Serializable,Comparable<Posto>{
 	@Transient
 	private BigDecimal precoGNV;
 	
+	@Transient 
+	private ParametrosGerais parametrosGerais;
+	
+	public ParametrosGerais getParametrosGerais() {
+		return parametrosGerais;
+	}
+	public void setParametrosGerais(ParametrosGerais parametrosGerais) {
+		this.parametrosGerais = parametrosGerais;
+	}
 	public BigDecimal getPrecoGNV() {
 		return precoGNV;
 	}

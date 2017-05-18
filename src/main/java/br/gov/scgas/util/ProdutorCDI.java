@@ -1,5 +1,6 @@
 package br.gov.scgas.util;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,7 @@ public class ProdutorCDI {
 	
 	@Produces
 	public Gson instanciaGson(){
-		GsonBuilder b = new GsonBuilder();
+		GsonBuilder b = new GsonBuilder().excludeFieldsWithModifiers(Modifier.STATIC);
 
 		b.registerTypeAdapter(Date.class, new GsonDateDeSerializer());
 		b.setDateFormat("dd/MM/yyyy");
