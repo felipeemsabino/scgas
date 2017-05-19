@@ -1,42 +1,27 @@
 package br.gov.scgas.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import org.apache.tomcat.jni.Thread;
 import org.hibernate.HibernateException;
 
 import com.google.gson.Gson;
 
-import br.gov.scgas.dao.NoticiasDao;
+import br.gov.scgas.annotation.Seguranca;
 import br.gov.scgas.dao.ParametrosGeraisDao;
-import br.gov.scgas.entidade.Contato;
-import br.gov.scgas.entidade.FiltroUsuarioApp;
-import br.gov.scgas.entidade.FirebaseData;
-import br.gov.scgas.entidade.FirebaseMensagem;
-import br.gov.scgas.entidade.FirebaseNotification;
-import br.gov.scgas.entidade.Noticias;
 import br.gov.scgas.entidade.ParametrosGerais;
-import br.gov.scgas.entidade.SimNao;
-import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.BaseContantes;
-import br.gov.scgas.util.SendEmail;
-import br.gov.scgas.util.SendNotificationFirebase;
 
 
-
+@Seguranca
 @Path("/parametrosservice")
 public class ParametrosGeraisService {
 
@@ -51,19 +36,20 @@ public class ParametrosGeraisService {
 
 	@POST
 	@Path("/cadastrarParametrosGerais")
-	public Response cadastrarNoticias(@Context HttpServletRequest request,String json) {
+	public Response cadastrarNoticias(@Context HttpHeaders headers,@Context HttpServletRequest request,String json) {
 		ParametrosGerais param = gson.fromJson(json, ParametrosGerais.class);
 
 		try {
-			if(param.getId() == null){
-				dao.save(param);
-			}else{
-				dao.update(param);
+			if(param.getValorMaxGNV() == null || param.getValorMaxGNV().compareTo(new BigDecimal(0.000)) == -1 ){
+				return Response.status(500).entity(gson.toJson(BaseContantes.msgValorMaior0)).build();
 			}
-
+			
+			if(param.getValorMinGnv() == null || param.getValorMinGnv().compareTo(new BigDecimal(0.000)) == -1 ){
+				return Response.status(500).entity(gson.toJson(BaseContantes.msgValorMaior0)).build();
+			}
+			dao.update(param);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-
 			e.printStackTrace();
 			return Response.status(500).entity(gson.toJson(BaseContantes.msg500Noticia)).build();
 		}
@@ -85,12 +71,12 @@ public class ParametrosGeraisService {
 	 **/
 	@GET
 	@Path("/recuperaParametrosGerais")
-	public Response recuperaNoticiaPorId() {
+	public Response recuperaNoticiaPorId(@Context HttpHeaders headers) {
 		try{
 			ParametrosGerais param = null;
 
-			param = dao.getById(ParametrosGerais.class,new Long(1l));
 
+			param = dao.getById(ParametrosGerais.class,new Long(1l));
 			if(param == null){
 				return Response.status(404).entity(gson.toJson("Parametros não cadastrado")).build();							
 			}

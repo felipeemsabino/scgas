@@ -21,6 +21,7 @@ public class BaseContantes
   public static final String msgPin404 = "PIN de recuperação de senha não encontrado!";
   public static final String msgErroPin = "Erro ao recuperar senha do usuario!";
   public static final String msg500Noticia = "Erro ao criar notícia!";
+  public static final String msgValorMaior0 = "O valor deve ser maior que 0";
   public static final String msgEmailEnviado = "Email enviado com sucesso.";
   public static final String lblDica = "Dicas e Noticias";
   public static final String appName = "Rota GNV";
