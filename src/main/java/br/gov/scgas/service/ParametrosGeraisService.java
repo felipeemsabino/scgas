@@ -34,6 +34,7 @@ public class ParametrosGeraisService {
 	private Gson gson;
 
 
+	
 	@POST
 	@Path("/cadastrarParametrosGerais")
 	public Response cadastrarNoticias(@Context HttpHeaders headers,@Context HttpServletRequest request,String json) {
