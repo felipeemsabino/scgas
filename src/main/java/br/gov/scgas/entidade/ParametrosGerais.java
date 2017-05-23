@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Table(name="TB_PARAMETROS_GERAL") 
 @NamedQueries({
 	@NamedQuery(name = "ParametrosGerais.recuperaParametros", 
-			query = "select obj.valorMinGnv, obj.valorMaxGNV from ParametrosGerais obj "
+			query = "select obj.valorMinGnv, obj.valorMaxGnv from ParametrosGerais obj "
 			)
 
 })
@@ -31,7 +31,7 @@ public class ParametrosGerais implements Serializable {
 	private BigDecimal valorMinGnv;
 	
 	@Column(name="VALOR_GNV_MAX",nullable = false, length = 10,precision=10,scale=3) 
-	private BigDecimal valorMaxGNV;
+	private BigDecimal valorMaxGnv;
 
 	public Long getId() {
 		return id;
@@ -49,13 +49,15 @@ public class ParametrosGerais implements Serializable {
 		this.valorMinGnv = valorMinGnv;
 	}
 
-	public BigDecimal getValorMaxGNV() {
-		return valorMaxGNV;
+	public BigDecimal getValorMaxGnv() {
+		return valorMaxGnv;
 	}
 
-	public void setValorMaxGNV(BigDecimal valorMaxGNV) {
-		this.valorMaxGNV = valorMaxGNV;
+	public void setValorMaxGnv(BigDecimal valorMaxGnv) {
+		this.valorMaxGnv = valorMaxGnv;
 	}
+
+	
 
 	
 	

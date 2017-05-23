@@ -21,7 +21,7 @@ import br.gov.scgas.entidade.ParametrosGerais;
 import br.gov.scgas.util.BaseContantes;
 
 
-@Seguranca
+//@Seguranca
 @Path("/parametrosservice")
 public class ParametrosGeraisService {
 
@@ -41,7 +41,7 @@ public class ParametrosGeraisService {
 		ParametrosGerais param = gson.fromJson(json, ParametrosGerais.class);
 
 		try {
-			if(param.getValorMaxGNV() == null || param.getValorMaxGNV().compareTo(new BigDecimal(0.000)) == -1 ){
+			if(param.getValorMaxGnv() == null || param.getValorMaxGnv().compareTo(new BigDecimal(0.000)) == -1 ){
 				return Response.status(500).entity(gson.toJson(BaseContantes.msgValorMaior0)).build();
 			}
 			
@@ -52,7 +52,7 @@ public class ParametrosGeraisService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return Response.status(500).entity(gson.toJson(BaseContantes.msg500Noticia)).build();
+			return Response.status(500).entity(gson.toJson(BaseContantes.msgErro500)).build();
 		}
 
 		return Response.status(200).entity(gson.toJson(param)).build();
