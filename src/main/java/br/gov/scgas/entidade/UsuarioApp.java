@@ -1,3 +1,4 @@
+
 package br.gov.scgas.entidade;
 
 import java.io.Serializable;
@@ -20,19 +21,24 @@ import javax.persistence.TemporalType;
 @Table(name="TB_USUARIO_APP") 
 @NamedQueries({
 	@NamedQuery(name = "UsuarioApp.autenticacaoFacebook", 
-			query = "select obj  from UsuarioApp obj  where obj.tokenFacebook = :idFacebook "
+			query = "select obj  from UsuarioApp obj  where obj.tokenFacebook = :idFacebook and (obj.ativo is null or obj.ativo = 'S') "
+					+ " and (obj.excluido is null or obj.excluido = 'N')"
 			),
 	@NamedQuery(name = "UsuarioApp.autenticacaoGmail", 
-	query = "select obj  from UsuarioApp obj  where obj.tokenGmail = :idGmail "
+	query = "select obj  from UsuarioApp obj  where obj.tokenGmail = :idGmail and (obj.ativo is null or obj.ativo = 'S') "
+					+ " and (obj.excluido is null or obj.excluido = 'N')"
 	),
 	@NamedQuery(name = "UsuarioApp.autentica", query = "select obj  from UsuarioApp obj"
-			+ " where obj.email = :email and obj.senha = :senha "
+			+ " where obj.email = :email and obj.senha = :senha and (obj.ativo is null or obj.ativo = 'S') "
+					+ " and (obj.excluido is null or obj.excluido = 'N')"
 			),
 	@NamedQuery(name = "UsuarioApp.recuperaUsuarioEmail", query = "select obj  from UsuarioApp obj"
-			+ " where obj.email = :email"
+			+ " where obj.email = :email and (obj.ativo is null or obj.ativo = 'S') "
+					+ " and (obj.excluido is null or obj.excluido = 'N')"
 			),
 	@NamedQuery(name = "UsuarioApp.recuperaSenhaPorPIN", query = "select obj  from UsuarioApp obj"
-			+ " where obj.email = :email and obj.pinSenha = :pinSenha "
+			+ " where obj.email = :email and obj.pinSenha = :pinSenha and (obj.ativo is null or obj.ativo = 'S') "
+					+ " and (obj.excluido is null or obj.excluido = 'N')"
 			)
 
 
@@ -75,6 +81,18 @@ public class UsuarioApp implements Serializable{
 	@Column(name="ATIVO", nullable = true)
 	private SimNao ativo;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name="EXCLUIDO", nullable = true)
+	private SimNao excluido;
+	
+	public SimNao getExcluido() {
+		return excluido;
+	}
+
+
+	public void setExcluido(SimNao excluido) {
+		this.excluido = excluido;
+	}
 	@Column(name="TK_NOTIFICACAO", nullable = true, length = 200,unique = true) 
 	private String tokenNotificacao;
 

@@ -140,6 +140,8 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
 				strQuery.append(" and obj.email = :email");
 			}
+			
+			strQuery.append(" and (obj.ativo is null or obj.ativo = 'S')  and (obj.excluido is null or obj.excluido = 'N' )");
 
 			Query query = getEntityManager().createQuery(strQuery.toString());
 
@@ -150,6 +152,7 @@ public class UsuarioDao<T, ID extends Serializable>  extends GenericDaoImpl<T, I
 			if(filtro.getEmail() != null && !filtro.getEmail().isEmpty()){
 				query.setParameter("email", "%"+filtro.getEmail()+"%");
 			}
+			
 
 
 

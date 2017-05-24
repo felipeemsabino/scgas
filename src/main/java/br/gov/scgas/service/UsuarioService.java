@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import br.gov.scgas.dao.UsuarioDao;
 import br.gov.scgas.entidade.FiltroUsuarioApp;
+import br.gov.scgas.entidade.SimNao;
 import br.gov.scgas.entidade.UsuarioApp;
 import br.gov.scgas.util.BaseContantes;
 import br.gov.scgas.util.GenerateSHA;
@@ -50,7 +51,7 @@ public class UsuarioService {
 				if(usuarioApp.getSenha() != null){
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));					
 				}
-				dao.save(usuarioApp);
+				dao.save(usuarioApp); 
 				usuarioApp.setSenha(null);
 			}else{
 				if((usuarioApp.getSenha() == null) || (usuarioApp.getSenha() != null && usuarioApp.getSenha().isEmpty())){
@@ -58,6 +59,10 @@ public class UsuarioService {
 					usuarioApp.setSenha(aux.getSenha());
 				}else{
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));				
+				}
+				
+				if(usuarioApp.getExcluido() != null && usuarioApp.getExcluido().equals(SimNao.S)){
+					usuarioApp.setAtivo(SimNao.N);
 				}
 
 				dao.update(usuarioApp);
