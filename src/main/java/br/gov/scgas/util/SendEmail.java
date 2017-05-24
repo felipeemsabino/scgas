@@ -42,7 +42,7 @@ public class SendEmail {
  
 		// Enter your correct gmail UserID and Password
 		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("smtp.gmail.com", "contatoscgas", "5cg45123");
+		transport.connect("smtp.gmail.com", "appgnv@jointecnologia.com.br", "scgas123456");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}
@@ -72,7 +72,7 @@ public class SendEmail {
 		
 		// Enter your correct gmail UserID and Password
 		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("smtp.gmail.com", "contatoscgas", "5cg45123");
+		transport.connect("smtp.gmail.com", "appgnv@jointecnologia.com.br", "scgas123456");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}
