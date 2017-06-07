@@ -202,7 +202,7 @@ public class PostoService {
 
 			}
 			Collections.sort(listaPostos);
-			BigInteger contador = dao.contaLinhas();
+			Integer contador = dao.contaLinhas();
 
 			if(contador.longValue() <= new Long(finalPosition) ){
 				listaPostos.add("{hasMore:"+0+"}");
@@ -259,6 +259,13 @@ public class PostoService {
 
 
 		try {
+			ParametrosGerais param = daoParam.getById(ParametrosGerais.class,1l);
+			
+			if(param.getValorMaxGnv().compareTo(price.getValorGNV()) < 0 || param.getValorMinGnv().compareTo(price.getValorGNV()) > 0 ){
+				return Response.status(500).entity(gson.toJson(BaseContantes.msgPriceOutRange1+param.getValorMinGnv()+
+						BaseContantes.msgPriceOutRange2+param.getValorMaxGnv())).build();
+			}
+			
 			daoPrecoPosto.save(price);
 
 		} catch (Exception e) {

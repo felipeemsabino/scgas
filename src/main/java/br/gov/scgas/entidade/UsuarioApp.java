@@ -64,13 +64,13 @@ public class UsuarioApp implements Serializable{
 	@Column(name="PIN_SENHA", nullable = true, length = 200) 
 	private String pinSenha;
 	
-	@Column(name="TK_FACEBOOK", nullable = true, length = 200,unique = true) 
+	@Column(name="TK_FACEBOOK", nullable = true, length = 200) 
 	private String tokenFacebook;
 	
-	@Column(name="TK_GMAIL", nullable = true, length = 200,unique = true) 
+	@Column(name="TK_GMAIL", nullable = true, length = 200) 
 	private String tokenGmail;
 	
-	@Column(name="TK_TWITER", nullable = true, length = 200,unique = true) 
+	@Column(name="TK_TWITER", nullable = true, length = 200) 
 	private String tokenTwiter;
 	
 	@Temporal(TemporalType.DATE)
@@ -93,7 +93,7 @@ public class UsuarioApp implements Serializable{
 	public void setExcluido(SimNao excluido) {
 		this.excluido = excluido;
 	}
-	@Column(name="TK_NOTIFICACAO", nullable = true, length = 200,unique = true) 
+	@Column(name="TK_NOTIFICACAO", nullable = true, length = 200) 
 	private String tokenNotificacao;
 
 

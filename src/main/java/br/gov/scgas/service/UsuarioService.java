@@ -51,6 +51,9 @@ public class UsuarioService {
 				if(usuarioApp.getSenha() != null){
 					usuarioApp.setSenha(GenerateSHA.getSHA256SecurePassword(usuarioApp.getSenha()));					
 				}
+				usuarioApp.setExcluido(SimNao.N);
+				usuarioApp.setAtivo(SimNao.S);
+				
 				dao.save(usuarioApp); 
 				usuarioApp.setSenha(null);
 			}else{

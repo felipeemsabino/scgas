@@ -32,10 +32,10 @@ public class PostoDao<T, ID extends Serializable>  extends GenericDaoImpl<T, ID>
 	}
 
 	@SuppressWarnings("unchecked")
-	public BigInteger contaLinhas() throws HibernateException, Exception {
+	public Integer contaLinhas() throws HibernateException, Exception {
 		StringBuilder	query = new StringBuilder(" select count(*) from tb_posto ");
 
-		BigInteger total = (BigInteger) getEntityManager().createNativeQuery(query.toString())
+		Integer total = (Integer) getEntityManager().createNativeQuery(query.toString())
 
 				.getSingleResult();
 

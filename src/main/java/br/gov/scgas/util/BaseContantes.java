@@ -11,6 +11,8 @@ public class BaseContantes
   public static final String msgDelPosto = "Posto excluido com sucesso!";
   public static final String msgAddPosto = "Posto inserido com sucesso!";
   public static final String msgErroUpdatePrice = "Erro ao atualizar preço.";
+  public static final String msgPriceOutRange1 = "Valor para GNV deve ser maior que R$";
+  public static final String msgPriceOutRange2 = " menor que R$";
   public static final String msgErro500 = "Erro inesperado.";
   public static final String msgErro404 = "Registro não encontrado.";
   public static final String emailContato = "appgnv@scgas.com.br";
