@@ -23,7 +23,7 @@ public class SendEmail {
 		// Step1
 		System.out.println("\n 1st ===> setup Mail Server Properties..");
 		mailServerProperties = System.getProperties();
-		mailServerProperties.put("mail.smtp.port", "587");
+		mailServerProperties.put("mail.smtp.port", "25");
 		mailServerProperties.put("mail.smtp.auth", "true");
 		mailServerProperties.put("mail.smtp.starttls.enable", "true");
 		System.out.println("Mail Server Properties have been setup successfully..");
@@ -44,7 +44,7 @@ public class SendEmail {
 
 		// Enter your correct gmail UserID and Password
 		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("mail.scgas.com.br", "mauricio.join", "S4ntinho#");
+		transport.connect("ns08.scgas.corp.br", "svc.appgnvdev@scgas.com.br", "z947LQ6!");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}
@@ -62,19 +62,7 @@ public class SendEmail {
 		System.out.println("\n\n 2nd ===> get Mail Session..");
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 
-		getMailSession = Session.getInstance(mailServerProperties, new javax.mail.Authenticator() {
-
-			protected PasswordAuthentication getPasswordAuthentication() {
-
-				return new PasswordAuthentication("mauricio.join", "S4ntinho#");
-
-			}
-
-		});
-
-
-
-
+		
 		generateMailMessage = new MimeMessage(getMailSession);
 		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(BaseContantes.emailContato));
 		generateMailMessage.setSubject(contato.getTitulo());
@@ -88,7 +76,8 @@ public class SendEmail {
 
 		// Enter your correct gmail UserID and Password
 		// if you have 2FA enabled then provide App Specific Password
-		transport.connect("mail.scgas.com.br", "mauricio.join", "S4ntinho#");
+		  
+		transport.connect("ns08.scgas.corp.br", "svc.appgnvdev@scgas.com.br", "z947LQ6!");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}

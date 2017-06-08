@@ -228,17 +228,17 @@ public class NoticiasService {
 	@Path("/contato")
 	public Response sendContact(@Context HttpServletRequest request,String json) {
 		try{
-			//Contato contato = gson.fromJson(json, Contato.class);
-			Contato contato = new Contato();
-			contato.setTextoContato("Contato");
-			contato.setTitulo("Titulo Contato");
+			Contato contato = gson.fromJson(json, Contato.class);
+			//Contato contato = new Contato();
+			//contato.setTextoContato("Contato");
+			//contato.setTitulo("Titulo Contato");
 			SendEmail sendEmail=new SendEmail();
 			sendEmail.sendContact(contato);
 			return Response.status(200).entity(BaseContantes.msgEmailEnviado).build();			
 																								
 		}catch(Exception e){
 			e.printStackTrace();
-			return Response.status(500).entity(null).build();
+			return Response.status(500).entity(e.getMessage()).build();
 		}
 	}
 
