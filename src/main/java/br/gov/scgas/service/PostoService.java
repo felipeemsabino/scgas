@@ -164,8 +164,9 @@ public class PostoService {
 			ParametrosGerais param = daoParam.getById(ParametrosGerais.class,1l);
 			
 			listaPostos = dao.listAllPosto(new Long(initialPosition),new Long(finalPosition));
-
+			int cont = 0;
 			for (Posto posto : (List<Posto>)listaPostos) {
+				System.out.println("Linha : "+cont++);
 				if(posto.getListaPrecosGNV() != null && !posto.getListaPrecosGNV().isEmpty()){
 					PrecoGNV prc = posto.getListaPrecosGNV().get(0);
 					prc.setPosto(null);
@@ -215,7 +216,6 @@ public class PostoService {
 			dao.closeDao();
 			return Response.status(200).entity(json).build();			
 		}catch(HibernateException e){
-
 			return Response.status(404).entity(BaseContantes.msgErroRecPosto).build();																							
 		}catch(Exception e){
 			e.printStackTrace();
